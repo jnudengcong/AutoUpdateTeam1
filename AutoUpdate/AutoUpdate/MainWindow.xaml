@@ -5,8 +5,22 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:AutoUpdate"
         mc:Ignorable="d"
-        Title="AutoUpdate" Height="450" Width="800">
-    <Grid>
-        
+        Title="AutoUpdate" Height="565.962" Width="800">
+
+    <Grid x:Name="Base_Grid">
+        <Grid x:Name="main_grid" HorizontalAlignment="Left" Height="503" Margin="0,32,0,0" VerticalAlignment="Top" Width="792"/>
+        <Menu x:Name="menu" HorizontalAlignment="Left" Margin="-2,-1,0,0" VerticalAlignment="Top" Width="794" Height="28">
+            <MenuItem x:Name="menu_file" Header=" 文件 " Height="28">
+                <MenuItem x:Name="menu_file_create" Header="新建配置文件" Height="28"/>
+                <MenuItem x:Name="menu_file_edit" Header="编辑配置文件" Height="28" />
+                <MenuItem x:Name="menu_file_exit" Header="退出" Height="28" />
+            </MenuItem>
+            <MenuItem x:Name="menu_setting" Header=" 设置 " Height="28">
+                <MenuItem x:Name="menu_setting_url" Header="设置网址" Height="28"/>
+            </MenuItem>
+            <MenuItem x:Name="menu_main" Header=" 主界面 " />
+            <MenuItem x:Name="menu_help" Header=" 帮助 " />
+        </Menu>
+
     </Grid>
 </Window>

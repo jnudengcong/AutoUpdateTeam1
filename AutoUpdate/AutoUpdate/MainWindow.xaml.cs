@@ -24,5 +24,6 @@ namespace AutoUpdate
         {
             InitializeComponent();
         }
+
     }
 }
