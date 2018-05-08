@@ -15,13 +15,19 @@ using System.Windows.Shapes;
 namespace AutoUpdate
 {
     /// <summary>
-    /// UrlWindow.xaml 的交互逻辑
+    /// UpdateWindow.xaml 的交互逻辑
     /// </summary>
-    public partial class UrlWindow : Window
+    public partial class UpdateWindow : Window
     {
-        public UrlWindow()
+        public UpdateWindow()
         {
             InitializeComponent();
+        }
+
+        private void ShowUpdatingPage(object sender, RoutedEventArgs e)
+        {
+            Prompt_Page.Visibility = Visibility.Hidden;
+            Updating_Page.Visibility = Visibility.Visible;
         }
 
         private void CloseWindow(object sender, RoutedEventArgs e)

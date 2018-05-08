@@ -23,24 +23,33 @@ namespace AutoUpdate
         public MainWindow()
         {
             InitializeComponent();
+            
         }
 
-        private void button_Click(object sender, RoutedEventArgs e)
+        private async void WindowLoaded(object sender, RoutedEventArgs e)
+        {
+            await Task.Delay(1000);
+            UpdateWindow update_window = new UpdateWindow();
+            update_window.ShowDialog();
+        }
+
+        private void ShowMainPage(object sender, RoutedEventArgs e)
         {
             main_page.Visibility = Visibility.Visible;
             configure_page.Visibility = Visibility.Hidden;
         }
 
-        private void button1_Click(object sender, RoutedEventArgs e)
+        private void ShowConfigurePage(object sender, RoutedEventArgs e)
         {
             main_page.Visibility = Visibility.Hidden;
             configure_page.Visibility = Visibility.Visible;
         }
 
-        private void button2_Click(object sender, RoutedEventArgs e)
+        private void ShowUrlWindow(object sender, RoutedEventArgs e)
         {
             UrlWindow urlWindow = new UrlWindow();
             urlWindow.ShowDialog();
         }
+
     }
 }
