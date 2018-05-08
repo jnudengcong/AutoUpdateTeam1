@@ -25,5 +25,22 @@ namespace AutoUpdate
             InitializeComponent();
         }
 
+        private void button_Click(object sender, RoutedEventArgs e)
+        {
+            main_page.Visibility = Visibility.Visible;
+            configure_page.Visibility = Visibility.Hidden;
+        }
+
+        private void button1_Click(object sender, RoutedEventArgs e)
+        {
+            main_page.Visibility = Visibility.Hidden;
+            configure_page.Visibility = Visibility.Visible;
+        }
+
+        private void button2_Click(object sender, RoutedEventArgs e)
+        {
+            UrlWindow urlWindow = new UrlWindow();
+            urlWindow.ShowDialog();
+        }
     }
 }
