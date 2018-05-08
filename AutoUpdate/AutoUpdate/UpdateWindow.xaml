@@ -8,7 +8,7 @@
         Title="可用更新" Height="265" Width="450">
     <Grid x:Name="Base_Page">
 
-        <Grid x:Name="Updating_Page" Visibility="Hidden">
+        <Grid x:Name="updating_page" Visibility="Hidden">
             <Label Content="名称：自动更新系统                             来源：https://auto_upgrade.com&#xA;" Margin="0,50,0,126"/>
             <Label Content="正在更新" HorizontalAlignment="Left" VerticalAlignment="Top" Width="100"/>
             <Label Content="更新会持续一段时间，你可以使用你的电脑在更新期间进行其他任务。" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="25,20,0,0" Width="410"/>
@@ -21,7 +21,7 @@
             <Button x:Name="button_cancel" Content="取消" HorizontalAlignment="Left" Height="25" Margin="290,185,0,0" 
                     VerticalAlignment="Top" Width="60" Click="CloseWindow"/>
         </Grid>
-        <Grid x:Name="Prompt_Page">
+        <Grid x:Name="prompt_page">
             <Label Content="应用程序更新" HorizontalAlignment="Left" VerticalAlignment="Top" Width="100"/>
             <Label Content="有新的版本可以更新，是否现在下载？" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="25,20,0,0" Width="410"/>
             <Border BorderBrush="Black" BorderThickness="0, 1" Height="45" Margin="0,50,0,0" VerticalAlignment="Top">

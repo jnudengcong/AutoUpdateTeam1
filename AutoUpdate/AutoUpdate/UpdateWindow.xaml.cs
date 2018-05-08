@@ -26,8 +26,8 @@ namespace AutoUpdate
 
         private void ShowUpdatingPage(object sender, RoutedEventArgs e)
         {
-            Prompt_Page.Visibility = Visibility.Hidden;
-            Updating_Page.Visibility = Visibility.Visible;
+            prompt_page.Visibility = Visibility.Hidden;
+            updating_page.Visibility = Visibility.Visible;
         }
 
         private void CloseWindow(object sender, RoutedEventArgs e)
