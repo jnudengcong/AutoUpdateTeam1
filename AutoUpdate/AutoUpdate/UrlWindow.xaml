@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:AutoUpdate"
         mc:Ignorable="d"
         Title="设置网址" Height="200" Width="480">
-    <Grid>
+    <Grid Background="#F0F0F0">
         <Button x:Name="button" Content="确定" HorizontalAlignment="Left" Margin="190,114,0,0" VerticalAlignment="Top" Width="75" Click="CloseWindow" Height="25"/>
         <Label x:Name="label" Content="更新网址：" HorizontalAlignment="Left" Margin="65,59,0,0" VerticalAlignment="Top"/>
         <TextBox x:Name="textBox" HorizontalAlignment="Left" Height="23" Margin="150,61,0,0" TextWrapping="Wrap" Text="https://auto_update.com" VerticalAlignment="Top" Width="234" FontSize="15"/>

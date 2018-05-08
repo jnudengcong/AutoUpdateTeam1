@@ -22,6 +22,7 @@ namespace AutoUpdate
         public UpdateWindow()
         {
             InitializeComponent();
+
         }
 
         private void ShowUpdatingPage(object sender, RoutedEventArgs e)

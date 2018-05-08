@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:AutoUpdate"
         mc:Ignorable="d"
-        Title="自动更新系统" Height="550" Width="800"
+        Title="自动更新系统" Height="560" Width="800"
         Loaded="WindowLoaded">
 
     <Grid x:Name="Base_Page">
@@ -21,7 +21,7 @@
             <MenuItem x:Name="menu_main" Header=" 主界面 " Click="ShowMainPage"/>
             <MenuItem x:Name="menu_help" Header=" 帮助 " />
         </Menu>
-        <Grid x:Name="main_page" Background="#F0F0F0"  HorizontalAlignment="Left" Height="508" Margin="0,27,0,-16" VerticalAlignment="Top" Width="792">
+        <Grid x:Name="main_page" Background="#F0F0F0"  HorizontalAlignment="Left" Height="508" Margin="0,27,0,-16" VerticalAlignment="Top" Width="792" d:IsHidden="True">
             <Border Background="#E6EBF0" BorderBrush="Gray" BorderThickness="0, 1, 1, 1" HorizontalAlignment="Left" Height="460" VerticalAlignment="Top" Width="270">
                 <TextBlock x:Name="textBlock" TextWrapping="Wrap"
                            Text="当前版本： 1.2&#x000A;&#x000A;占用空间： 34MB&#x000A;
@@ -30,7 +30,7 @@
                            &#x000A;cb0c2ee777054e54c51420dfc2e2cf82" FontSize="16" Margin="15,10,15,10" />
             </Border>
             <Border BorderBrush="Gray" BorderThickness="1, 1, 0, 1" HorizontalAlignment="Left" Height="460" Margin="270,0,0,0" VerticalAlignment="Top" Width="522">
-                <DataGrid x:Name="data_grid" Background="White" ItemsSource="{Binding}" AutoGenerateColumns="False" BorderBrush="Gray" Margin="9,35,20,9">
+                <DataGrid x:Name="main_data_grid" Background="White" ItemsSource="{Binding}" AutoGenerateColumns="False" BorderBrush="Gray" Margin="9,35,20,9">
                     <DataGrid.Columns>
                         <DataGridTextColumn Header="配置文件" IsReadOnly="True" Width="*" Binding="{Binding ConFile}"/>
                         <DataGridTextColumn Header="版本" IsReadOnly="True" Width="*" Binding="{Binding Version}"/>
@@ -41,7 +41,44 @@
             </Border>
             <Label x:Name="label" FontSize="20" Content="历史版本" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="280,0,0,0" Height="36" Width="100"/>
         </Grid>
-        <Grid x:Name="configure_page" Background="#F0F0F0" Height="492" VerticalAlignment="Top" Margin="0,27,0,0" d:IsHidden="True"/>
+        <Grid x:Name="config_page" Background="#F0F0F0" Height="502" VerticalAlignment="Top" Margin="0,27,0,0">
+            <TreeView x:Name="treeView" BorderBrush="Gray" HorizontalAlignment="Left" Height="440" VerticalAlignment="Top" Width="183">
+                <TreeViewItem Header="D:\AUS" Height="417" Width="180" IsExpanded="True">
+                    <TreeViewItem Header="Configuration" HorizontalAlignment="Left" Height="16" Width="161">
+                        <TreeViewItem Header="sth" HorizontalAlignment="Left" Height="100" Width="142"/>
+                    </TreeViewItem>
+                    <TreeViewItem Header="Package" HorizontalAlignment="Left" Height="16" Width="161">
+                        <TreeViewItem Header="TreeViewItem" HorizontalAlignment="Left" Height="100" Width="142"/>
+                    </TreeViewItem>
+                    <TreeViewItem Header="Local" HorizontalAlignment="Left" Height="16" Width="161">
+                        <TreeViewItem Header="TreeViewItem" HorizontalAlignment="Left" Height="100" Width="142"/>
+                    </TreeViewItem>
+                    <TreeViewItem Header="README.md" HorizontalAlignment="Left" Height="16" Width="161"/>
+                    <TreeViewItem Header="aus.exe" HorizontalAlignment="Left" Height="100" Width="161"/>
+                </TreeViewItem>
+            </TreeView>
+            <DataGrid x:Name="config_data_grid" AutoGenerateColumns="False" BorderBrush="Gray" ItemsSource="{Binding}" HorizontalAlignment="Left" Height="440" Margin="183,0,0,0" VerticalAlignment="Top" Width="428">
+                <DataGrid.Columns>
+                    <DataGridCheckBoxColumn Binding="{Binding Picked}"/>
+                    <DataGridTextColumn Header="文件" Width="1.2*" Binding="{Binding File}"/>
+                    <DataGridTextColumn Header="版本" Width="0.8*" Binding="{Binding Version}"/>
+                    <DataGridTextColumn Header="最近更新" Width="1.3*" Binding="{Binding Time}"/>
+                    <DataGridTextColumn Header="哈希值" Width="5*" Binding="{Binding Hash}"/>
+                </DataGrid.Columns>
+            </DataGrid>
+            <ComboBox x:Name="comboBox" SelectedIndex="0" HorizontalAlignment="Left" Margin="611,0,0,0" VerticalAlignment="Top" Width="176">
+                <ComboBoxItem Content="部分更新" HorizontalAlignment="Left" Width="179"/>
+                <ComboBoxItem Content="整体更新" HorizontalAlignment="Left" Width="179"/>
+                <ComboBoxItem Content="更新后重启" HorizontalAlignment="Left" Width="179"/>
+            </ComboBox>
+            <Border BorderBrush="Gray" BorderThickness="1" HorizontalAlignment="Left" Height="419" Margin="611,21,0,0" VerticalAlignment="Top" Width="181">
+                <TextBlock x:Name="textBlock1" Background="White" TextWrapping="Wrap" Text="README.md" Margin="0,0,0,0"/>
+            </Border>
+            <Button x:Name="button_back" Content="返回" Click="ShowMainPage"
+                    HorizontalAlignment="Left" Margin="535,455,0,0" VerticalAlignment="Top" Height="25" Width="76" RenderTransformOrigin="0.105,0.62"/>
+            <Button x:Name="button_save_config" Content="生成版本" HorizontalAlignment="Left" Margin="650,455,0,0" VerticalAlignment="Top" Height="25" Width="76"/>
+            <Button x:Name="button_create_config" Content="确定" HorizontalAlignment="Left" Margin="410,455,0,0" VerticalAlignment="Top" Height="25" Width="76"/>
+        </Grid>
 
     </Grid>
 </Window>
