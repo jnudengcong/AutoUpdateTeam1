@@ -26,7 +26,7 @@
             <MenuItem x:Name="menu_main" Header=" 主界面 " Click="ShowMainPage"/>
             <MenuItem x:Name="menu_help" Header=" 帮助 " Visibility="Hidden"/>
         </Menu>
-        <Grid x:Name="main_page" Background="#F0F0F0"  HorizontalAlignment="Left" Height="508" Margin="0,27,0,-6" VerticalAlignment="Top" Width="792" d:IsHidden="True" Grid.ColumnSpan="2">
+        <Grid x:Name="main_page" Background="#F0F0F0"  HorizontalAlignment="Left" Height="508" Margin="0,27,0,-6" VerticalAlignment="Top" Width="792" Grid.ColumnSpan="2" d:IsHidden="True">
             <Border Background="#E6EBF0" BorderBrush="Gray" BorderThickness="0, 1, 1, 1" HorizontalAlignment="Left" Height="460" VerticalAlignment="Top" Width="270">
                 <TextBlock x:Name="textBlock" TextWrapping="Wrap"
                            Text="当前版本： 1.2&#x000A;&#x000A;占用空间： 34MB&#x000A;
@@ -46,7 +46,7 @@
             </Border>
             <Label x:Name="label" FontSize="20" Content="历史版本" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="280,0,0,0" Height="36" Width="100"/>
         </Grid>
-        <Grid x:Name="config_page" Background="#F0F0F0" Height="502" VerticalAlignment="Top" Margin="0,27,0,0" Grid.ColumnSpan="2">
+        <Grid x:Name="config_page" Background="#F0F0F0" Height="502" VerticalAlignment="Top" Margin="0,27,0,0" Grid.ColumnSpan="2" d:IsLocked="True">
             <TreeView x:Name="treeView" BorderBrush="Gray" HorizontalAlignment="Left" Height="440" VerticalAlignment="Top" Width="183">
                 <TreeViewItem Header="D:\AUS" Height="417" Width="180" IsExpanded="True">
                     <TreeViewItem Header="Configuration" HorizontalAlignment="Left" Height="16" Width="161">

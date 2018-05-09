@@ -87,6 +87,8 @@ namespace AutoUpdate
         {
             VersionWindow versionWindow = new VersionWindow();
             versionWindow.ShowDialog();
+            main_page.Visibility = Visibility.Visible;
+            config_page.Visibility = Visibility.Hidden;
         }
 
         private void Shutdown(object sender, RoutedEventArgs e)
