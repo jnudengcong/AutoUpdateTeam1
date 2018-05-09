@@ -89,5 +89,10 @@ namespace AutoUpdate
             versionWindow.ShowDialog();
         }
 
+        private void Shutdown(object sender, RoutedEventArgs e)
+        {
+            App.Current.Shutdown();
+        }
+
     }
 }

@@ -18,7 +18,7 @@
             <MenuItem x:Name="menu_file" Header=" 文件 " Height="28">
                 <MenuItem x:Name="menu_file_create" Header="新建配置文件" Height="28" Click="ShowConfigurePage"/>
                 <MenuItem x:Name="menu_file_edit" Header="编辑配置文件" Height="28" Click="ShowConfigurePage"/>
-                <MenuItem x:Name="menu_file_exit" Header="退出" Height="28" />
+                <MenuItem x:Name="menu_file_exit" Header="退出" Height="28" Click="Shutdown"/>
             </MenuItem>
             <MenuItem x:Name="menu_setting" Header=" 设置 " Height="28">
                 <MenuItem x:Name="menu_setting_url" Header="设置网址" Height="28" Click="ShowUrlWindow"/>
