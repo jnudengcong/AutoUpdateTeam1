@@ -76,8 +76,8 @@
             </Border>
             <Button x:Name="button_back" Content="返回" Click="ShowMainPage"
                     HorizontalAlignment="Left" Margin="535,455,0,0" VerticalAlignment="Top" Height="25" Width="76" RenderTransformOrigin="0.105,0.62"/>
-            <Button x:Name="button_save_config" Content="生成版本" HorizontalAlignment="Left" Margin="650,455,0,0" VerticalAlignment="Top" Height="25" Width="76"/>
-            <Button x:Name="button_create_config" Content="确定" HorizontalAlignment="Left" Margin="410,455,0,0" VerticalAlignment="Top" Height="25" Width="76"/>
+            <Button x:Name="button_save_config" Content="确定" HorizontalAlignment="Left" Margin="410,455,0,0" VerticalAlignment="Top" Height="25" Width="76"/>
+            <Button x:Name="button_create_config" Content="生成版本" Click="ShowVersionWindow" HorizontalAlignment="Left" Margin="650,455,0,0" VerticalAlignment="Top" Height="25" Width="76"/>
         </Grid>
 
     </Grid>

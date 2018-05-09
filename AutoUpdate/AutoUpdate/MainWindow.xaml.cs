@@ -83,5 +83,11 @@ namespace AutoUpdate
             urlWindow.ShowDialog();
         }
 
+        private void ShowVersionWindow(object sender, RoutedEventArgs e)
+        {
+            VersionWindow versionWindow = new VersionWindow();
+            versionWindow.ShowDialog();
+        }
+
     }
 }
