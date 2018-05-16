@@ -6,11 +6,10 @@
         xmlns:local="clr-namespace:AutoUpdate"
         WindowStartupLocation="CenterScreen"
         mc:Ignorable="d"
-        Title="生成版本" Height="187.5" Width="444">
+        Title="生成版本" Height="187.5" Width="265">
     <Grid Background="#F0F0F0">
-        <Label x:Name="label" Content="生成新版本成功!" FontSize="18" HorizontalAlignment="Left" Margin="35,21,0,0" VerticalAlignment="Top" Width="180"/>
-        <ProgressBar Value="100" HorizontalAlignment="Left" Height="30" Margin="58,59,0,0" VerticalAlignment="Top" Width="310"/>
-        <Button x:Name="button" Content="确认" Click="CloseWindow" HorizontalAlignment="Left" Margin="175,110,0,0" VerticalAlignment="Top" Height="25" Width="75"/>
+        <Label x:Name="label" Content="生成新版本成功!" FontSize="18" HorizontalAlignment="Left" Margin="59,34,0,0" VerticalAlignment="Top" Width="145"/>
+        <Button x:Name="button" Content="确认" Click="CloseWindow" HorizontalAlignment="Left" Margin="92,93,0,0" VerticalAlignment="Top" Height="25" Width="75"/>
 
     </Grid>
 </Window>

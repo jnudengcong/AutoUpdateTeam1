@@ -7,6 +7,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Documents;
+using System.Windows.Forms;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
@@ -39,6 +40,11 @@ namespace AutoUpdate
             config_grid_list.Add(new ConfigureGridData { Picked = false, File = "aus.exe", Version = "2.11", Time = "2018.4.24", Hash = "36b4fa0153d9fe18c77dc124dc593143" });
 
             config_data_grid.ItemsSource = config_grid_list;
+
+            context_menu.MouseRightButtonDown += (sender, e) =>
+            {
+
+            };
         }
 
         public class MainGridData
@@ -83,8 +89,29 @@ namespace AutoUpdate
             urlWindow.ShowDialog();
         }
 
+        private void OpenFileWindow(object sender, RoutedEventArgs e)
+        {
+            OpenFileDialog sfd = new OpenFileDialog();
+            //设置这个对话框的起始保存路径  
+            sfd.InitialDirectory = @"D:\";
+            //设置保存的文件的类型，注意过滤器的语法  
+            sfd.Filter = "CONF配置文件|*.conf";
+            //调用ShowDialog()方法显示该对话框，该方法的返回值代表用户是否点击了确定按钮  
+            sfd.ShowDialog();
+
+            ShowConfigurePage(sender, e);
+        }
+
         private void ShowVersionWindow(object sender, RoutedEventArgs e)
         {
+            SaveFileDialog sfd = new SaveFileDialog();
+            //设置这个对话框的起始保存路径  
+            sfd.InitialDirectory = @"D:\";
+            //设置保存的文件的类型，注意过滤器的语法  
+            sfd.Filter = "CONF配置文件|*.conf";
+            //调用ShowDialog()方法显示该对话框，该方法的返回值代表用户是否点击了确定按钮  
+            sfd.ShowDialog();
+
             VersionWindow versionWindow = new VersionWindow();
             versionWindow.ShowDialog();
             main_page.Visibility = Visibility.Visible;
@@ -96,5 +123,6 @@ namespace AutoUpdate
             App.Current.Shutdown();
         }
 
+        
     }
 }
