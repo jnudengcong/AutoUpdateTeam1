@@ -31,7 +31,7 @@ namespace AutoUpdate
             m_streamReader.Close();
         }
 
-        private void CloseWindow(object sender, RoutedEventArgs e)
+        private void SaveUrl(object sender, RoutedEventArgs e)
         {
             FileStream fs = new FileStream(@"url.ini", FileMode.Create, FileAccess.Write);
             StreamWriter m_streamWriter = new StreamWriter(fs);
@@ -44,6 +44,14 @@ namespace AutoUpdate
             m_streamWriter.Flush();
             m_streamWriter.Close();
             this.Close();
+        }
+
+        private void SaveUrl(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Enter)
+            {
+                SaveUrl(sender, (RoutedEventArgs)e);
+            }
         }
     }
 }
