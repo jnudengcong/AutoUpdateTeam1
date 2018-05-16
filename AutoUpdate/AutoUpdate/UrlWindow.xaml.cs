@@ -23,7 +23,7 @@ namespace AutoUpdate
         public UrlWindow()
         {
             InitializeComponent();
-            FileStream fs = new FileStream(@"url.ini", FileMode.Open, FileAccess.Read);
+            FileStream fs = new FileStream(@"url.ini", FileMode.OpenOrCreate, FileAccess.Read);
             StreamReader m_streamReader = new StreamReader(fs);
             m_streamReader.BaseStream.Seek(0, SeekOrigin.Begin);
             string strLine = m_streamReader.ReadLine();
