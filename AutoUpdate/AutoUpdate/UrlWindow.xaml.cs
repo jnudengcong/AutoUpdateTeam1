@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -22,10 +23,26 @@ namespace AutoUpdate
         public UrlWindow()
         {
             InitializeComponent();
+            FileStream fs = new FileStream(@"url.ini", FileMode.Open, FileAccess.Read);
+            StreamReader m_streamReader = new StreamReader(fs);
+            m_streamReader.BaseStream.Seek(0, SeekOrigin.Begin);
+            string strLine = m_streamReader.ReadLine();
+            url_text.Text = strLine;
+            m_streamReader.Close();
         }
 
         private void CloseWindow(object sender, RoutedEventArgs e)
         {
+            FileStream fs = new FileStream(@"url.ini", FileMode.Create, FileAccess.Write);
+            StreamWriter m_streamWriter = new StreamWriter(fs);
+            m_streamWriter.Flush();
+            //设置当前流的位置
+            m_streamWriter.BaseStream.Seek(0, SeekOrigin.Begin);
+            //写入内容
+            m_streamWriter.Write(url_text.Text);
+            //关闭此文件
+            m_streamWriter.Flush();
+            m_streamWriter.Close();
             this.Close();
         }
     }
