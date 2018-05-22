@@ -23,6 +23,7 @@ namespace AutoUpdate
         public UrlWindow()
         {
             InitializeComponent();
+            // 初始化url窗口中的网址
             FileStream fs = new FileStream(@"url.ini", FileMode.OpenOrCreate, FileAccess.Read);
             StreamReader m_streamReader = new StreamReader(fs);
             m_streamReader.BaseStream.Seek(0, SeekOrigin.Begin);
@@ -46,10 +47,12 @@ namespace AutoUpdate
             this.Close();
         }
 
+        // 重载函数，允许回车进行保存
         private void SaveUrl(object sender, KeyEventArgs e)
         {
             if (e.Key == Key.Enter)
             {
+                // 这里的e之所以进行类型转换是为了第一个SaveUrl函数，否则会死循环
                 SaveUrl(sender, (RoutedEventArgs)e);
             }
         }

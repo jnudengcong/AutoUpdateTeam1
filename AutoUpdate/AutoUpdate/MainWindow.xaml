@@ -7,7 +7,7 @@
         mc:Ignorable="d"
         WindowStartupLocation="CenterScreen"
         Title="自动更新系统" Height="560" Width="800"
-        Loaded="WindowLoaded">
+        Loaded="WindowLoaded"> 
 
     <Grid x:Name="Base_Page">
         <Grid.ColumnDefinitions>
@@ -37,7 +37,7 @@
                            Text="当前版本： 1.2&#x000A;&#x000A;占用空间： 34MB&#x000A;
                            &#x000A;文件数量： 15个文件，2个文件夹&#x000A;&#x000A;更新时间： 2017.12.20&#x000A;
                            &#x000A;配置文件哈希：
-                           &#x000A;cb0c2ee777054e54c51420dfc2e2cf82" FontSize="16" Margin="15,10,15,10" />
+                           &#x000A;cb0c2ee777054e54c51420dfc2e2cf82" FontSize="16" Margin="15,10,15,10" /> 
             </Border>
             <Border BorderBrush="Gray" BorderThickness="1, 1, 0, 1" HorizontalAlignment="Left" Height="460" Margin="270,0,0,0" VerticalAlignment="Top" Width="522">
                 <DataGrid x:Name="main_data_grid" Background="White" ItemsSource="{Binding}" AutoGenerateColumns="False" BorderBrush="Gray" Margin="9,35,20,9">
