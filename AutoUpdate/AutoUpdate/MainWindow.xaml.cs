@@ -26,6 +26,7 @@ namespace AutoUpdate
         {
             InitializeComponent();
 
+
             // 初始化窗口时先把配置界面隐藏，也可以在xaml中设置，但是xaml的效果是实时的，不方便调试
             config_page.Visibility = Visibility.Hidden;
 
@@ -36,14 +37,8 @@ namespace AutoUpdate
             main_grid_list.Add(new MainGridData { ConFile = "ConFile3", Version = "v1.06", Time = "2017.11.29", Hash = "7889e750271c12eca0dfd8be3639c6b1" });
             main_grid_list.Add(new MainGridData { ConFile = "ConFile4", Version = "v1.2", Time = "2017.12.20", Hash = "cb0c2ee777054e54c51420dfc2e2cf82" });
 
-            main_data_grid.ItemsSource = main_grid_list;
-
-            // 写死在编辑界面的数据
-            var config_grid_list = new List<ConfigureGridData>();
-            config_grid_list.Add(new ConfigureGridData { Picked = true, File = "README.md", Version = "1.03", Time = "2017.11.13", Hash = "26205fa396afae7e698346556c23f256" });
-            config_grid_list.Add(new ConfigureGridData { Picked = false, File = "aus.exe", Version = "2.11", Time = "2018.4.24", Hash = "36b4fa0153d9fe18c77dc124dc593143" });
-
-            config_data_grid.ItemsSource = config_grid_list;
+           
+            
 
         }
 
@@ -54,6 +49,7 @@ namespace AutoUpdate
             public string Version { get; set; } 
             public string Time { get; set; }
             public string Hash { get; set; }
+            
         }
 
         // 编辑界面中的数据结构
@@ -64,7 +60,11 @@ namespace AutoUpdate
             public string Version { get; set; }
             public string Time { get; set; }
             public string Hash { get; set; }
-        }
+
+            public string UpdateType { get; set; }
+
+
+    }
 
         // 窗口加载完之后的函数，在xaml中进行了绑定，关键字async异步进行调用，否则无法得到想要的效果
         // 窗口加载完后还未进行渲染，如果是渲染完之后，可以在xaml中使用ContentRendered进行绑定
@@ -104,6 +104,9 @@ namespace AutoUpdate
             {
 
             }
+
+
+
 
         }
 
@@ -188,6 +191,11 @@ namespace AutoUpdate
             }
 
 
+        }
+
+        private void config_data_grid_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            
         }
     }
 }
