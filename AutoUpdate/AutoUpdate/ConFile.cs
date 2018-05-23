@@ -117,6 +117,11 @@ namespace AutoUpdate
             return this.time;
         }
 
+        public void SetHash(string hash)
+        {
+            this.hash = hash;
+        }
+
         public string GetHash()
         {
             return this.hash;

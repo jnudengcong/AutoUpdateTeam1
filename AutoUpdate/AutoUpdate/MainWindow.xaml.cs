@@ -15,6 +15,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.Diagnostics;
 
 namespace AutoUpdate
 {
@@ -29,28 +30,27 @@ namespace AutoUpdate
         public MainWindow()
         {
             InitializeComponent();
-            
             // 初始化窗口时先把配置界面隐藏，也可以在xaml中设置，但是xaml的效果是实时的，不方便调试
             config_page.Visibility = Visibility.Hidden;
 
             // 写死在主界面的数据，通过数据列表的绑定进行显示，还没试过动态删除，具体用法要结合xaml来看
             var main_grid_list = new List<MainGridData>();
            
-            DirectoryInfo dic = new DirectoryInfo(".\\ConFile");
+            DirectoryInfo dic = new DirectoryInfo("ConFile");
             System.IO.FileInfo[] fileinfo = dic.GetFiles();
             //遍历文件列表
             con_file_list = new List<ConFile>();
             foreach (System.IO.FileInfo it in fileinfo)
             {
-                //config_grid_list.Add(new ConfigureGridData { Picked = false, File = it.Name, Version = "1.0", Time = it.LastWriteTime.ToString(), Hash = "26205fa396afae7e698346556c23f256" });
-                con_file_list.Add(new ConFile(it.Name));
+                con_file_list.Add(new ConFile("ConFile\\" + it.Name));
             }
 
             foreach (var it in con_file_list)
             {
                 main_grid_list.Add(new MainGridData
                 {
-                    ConFile = it.GetName(),
+                    
+                    ConFile = it.GetName().Substring(it.GetName().LastIndexOf("\\") + 1),
                     Version = it.GetVersion().ToString(),
                     Time = it.GetTime(),
                     Hash = it.GetHash()
@@ -65,7 +65,7 @@ namespace AutoUpdate
             comboBoxItems.Add("部分更新");
             dataGridComboBoxColumn.ItemsSource = comboBoxItems;
 
-            con_file = new ConFile("confile1", 2.1f, "2018/5/23", "abcdefg");
+            con_file = new ConFile("confile1", 2.1f, "2018/5/23", "6277e2a7446059985dc9bcf0a4ac1a8f");
 
         }
 
@@ -191,14 +191,41 @@ namespace AutoUpdate
                 //获取文件路径，不带文件名
                 string FilePath = localFilePath.Substring(0, localFilePath.LastIndexOf("\\"));
 
-                MainWindow.con_file.SetName(FilePath + "ConFile\\" + fileNameExt);
+                string full_name = FilePath + "ConFile\\" + fileNameExt;
+                MainWindow.con_file.SetName(full_name);
+                MainWindow.con_file.SetHash(CreateMD5(full_name));
                 
                 MainWindow.con_file.SaveConFile();
             }
-
+            var main_grid_list = new List<MainGridData>();
 
             VersionWindow versionWindow = new VersionWindow();
             versionWindow.ShowDialog();
+
+            DirectoryInfo dic = new DirectoryInfo("ConFile");
+            System.IO.FileInfo[] fileinfo = dic.GetFiles();
+            //遍历文件列表
+            con_file_list = new List<ConFile>();
+            foreach (System.IO.FileInfo it in fileinfo)
+            {
+                //config_grid_list.Add(new ConfigureGridData { Picked = false, File = it.Name, Version = "1.0", Time = it.LastWriteTime.ToString(), Hash = "26205fa396afae7e698346556c23f256" });
+                con_file_list.Add(new ConFile("ConFile\\" + it.Name));
+            }
+
+            foreach (var it in con_file_list)
+            {
+                main_grid_list.Add(new MainGridData
+                {
+
+                    ConFile = it.GetName().Substring(it.GetName().LastIndexOf("\\") + 1),
+                    Version = it.GetVersion().ToString(),
+                    Time = it.GetTime(),
+                    Hash = it.GetHash()
+                });
+            }
+
+            main_data_grid.ItemsSource = main_grid_list;
+
             main_page.Visibility = Visibility.Visible;
             config_page.Visibility = Visibility.Hidden;
 
@@ -238,7 +265,7 @@ namespace AutoUpdate
                 //遍历文件列表
                 foreach (System.IO.FileInfo it in fileinfo)
                 {
-                    config_grid_list.Add(new ConfigureGridData { Picked = false, File = it.Name, Version = "1.0", Time = it.LastWriteTime.ToString(), Hash = "26205fa396afae7e698346556c23f256" });
+                    config_grid_list.Add(new ConfigureGridData { Picked = false, File = it.Name, Version = "1.0", Time = it.LastWriteTime.ToString(), Hash = CreateMD5(it.Name) });
                 }
                 config_data_grid.ItemsSource = config_grid_list;
 
@@ -262,6 +289,13 @@ namespace AutoUpdate
             string result = a.UpdateType;
 
             string name = a.File;
+            Trace.WriteLine("name: " + name);
+            foreach (var item in con_file.GetList())
+            {
+                Trace.WriteLine("item name: " + item.GetName());
+                if (item.GetName() == name)
+                    return;
+            }
             float version = float.Parse(a.Version);
             string hash = a.Hash;
             FileInfo.UpdateMethod u_method = FileInfo.UpdateMethod.WHOLE;
@@ -293,6 +327,24 @@ namespace AutoUpdate
         private void config_data_grid_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             
+        }
+
+        public static string CreateMD5(string input)
+        {
+            // Use input string to calculate MD5 hash
+            using (System.Security.Cryptography.MD5 md5 = System.Security.Cryptography.MD5.Create())
+            {
+                byte[] inputBytes = System.Text.Encoding.ASCII.GetBytes(input);
+                byte[] hashBytes = md5.ComputeHash(inputBytes);
+
+                // Convert the byte array to hexadecimal string
+                StringBuilder sb = new StringBuilder();
+                for (int i = 0; i < hashBytes.Length; i++)
+                {
+                    sb.Append(hashBytes[i].ToString("X2"));
+                }
+                return sb.ToString();
+            }
         }
     }
 }
