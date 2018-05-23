@@ -8,13 +8,14 @@ using System.Threading.Tasks;
 
 namespace AutoUpdate
 {
-    class ConFile
+    public class ConFile
     {
         private string name;
         private float version;
         private string time;
         private string hash;
         private List<FileInfo> file_list;
+
 
         public ConFile(string name, float version, string time, string hash)
         {
@@ -28,7 +29,6 @@ namespace AutoUpdate
         public ConFile(string name)
         {
             this.name = name;
-            this.version = 0;
             if (System.IO.File.Exists(name))
             {
                 this.file_list = new List<FileInfo>();
@@ -36,6 +36,7 @@ namespace AutoUpdate
             }
             
         }
+
 
         public void AddFile(FileInfo file_info)
         {
@@ -96,6 +97,10 @@ namespace AutoUpdate
             m_streamReader.Close();
         }
 
+        public void SetName(string name)
+        {
+            this.name = name;
+        }
 
         public string GetName()
         {

@@ -22,13 +22,14 @@ namespace AutoUpdate
         public UpdateWindow()
         {
             InitializeComponent();
-
         }
 
         private void ShowUpdatingPage(object sender, RoutedEventArgs e)
         {
             prompt_page.Visibility = Visibility.Hidden;
             updating_page.Visibility = Visibility.Visible;
+
+            
         }
 
         private void CloseWindow(object sender, RoutedEventArgs e)
