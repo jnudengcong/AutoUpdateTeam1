@@ -72,9 +72,18 @@ namespace AutoUpdate
         {
             // 主窗口加载完后，延迟1秒打开更新提示框
             await Task.Delay(1000);
-            UpdateWindow update_window = new UpdateWindow();
-            // 以对话框的形式打开
-            update_window.ShowDialog();
+            FileStream fs_url = new FileStream(@"url.ini", FileMode.OpenOrCreate, FileAccess.Read);
+            StreamReader m_streamReader = new StreamReader(fs_url);
+            m_streamReader.BaseStream.Seek(0, SeekOrigin.Begin);
+            string url = m_streamReader.ReadLine();
+            ConFile con_install = new ConFile(url);
+            if (con_install.GetVersion() > 1.1)
+            {
+                UpdateWindow update_window = new UpdateWindow();
+                // 以对话框的形式打开
+                update_window.ShowDialog();
+            }
+            
         }
 
         private void ShowMainPage(object sender, RoutedEventArgs e)

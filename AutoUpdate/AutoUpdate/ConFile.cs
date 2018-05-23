@@ -28,8 +28,13 @@ namespace AutoUpdate
         public ConFile(string name)
         {
             this.name = name;
-            this.file_list = new List<FileInfo>();
-            ReadConFile();
+            this.version = 0;
+            if (System.IO.File.Exists(name))
+            {
+                this.file_list = new List<FileInfo>();
+                ReadConFile();
+            }
+            
         }
 
         public void AddFile(FileInfo file_info)
