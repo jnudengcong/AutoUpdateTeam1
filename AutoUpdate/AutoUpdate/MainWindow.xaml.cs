@@ -91,21 +91,23 @@ namespace AutoUpdate
 
             try
             {
-                DriveInfo[] dir = DriveInfo.GetDrives();
-                foreach (DriveInfo item in dir)
-                {
-                    TreeViewItem newItem = new TreeViewItem();
-                    newItem.Header = item.Name;
-                    newItem.Tag = item.Name;
-                    treeView.Items.Add(item);
-                }
+                //    DriveInfo[] dir = DriveInfo.GetDrives();
+                //    foreach (DriveInfo item in dir)
+                //    {
+                //        TreeViewItem newItem = new TreeViewItem();
+                //        newItem.Header = item.Name;
+                //        newItem.Tag = item.Name;
+                //        treeView.Items.Add(item);
+                //    }
+                TreeViewItem tvi = new TreeViewItem();
+                tvi.Header = AppDomain.CurrentDomain.BaseDirectory;
+                tvi.Tag = AppDomain.CurrentDomain.BaseDirectory;
+                treeView.Items.Add(tvi);
             }
             catch
             {
 
             }
-
-
 
 
         }
@@ -158,14 +160,15 @@ namespace AutoUpdate
             {
                 //遍历目录
                 TreeViewItem treeViewItem = e.OriginalSource as TreeViewItem;
-                DirectoryInfo dic = new DirectoryInfo(treeViewItem.Header.ToString());
+                treeViewItem.Items.Clear();
+                DirectoryInfo dic = new DirectoryInfo(treeViewItem.Tag.ToString());
                 DirectoryInfo[] info = dic.GetDirectories();
                 foreach (DirectoryInfo item in info)
                 {
-                    TreeViewItem newItem = new TreeViewItem();
-                    newItem.Header = item.FullName;
-
-                    treeViewItem.Items.Add(newItem);
+                    TreeViewItem tvi = new TreeViewItem();
+                    tvi.Header = item.Name;
+                    tvi.Tag = item.FullName;
+                    treeViewItem.Items.Add(tvi);
                 }
 
 
