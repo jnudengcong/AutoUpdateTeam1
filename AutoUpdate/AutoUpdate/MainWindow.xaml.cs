@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -86,6 +87,24 @@ namespace AutoUpdate
         {
             main_page.Visibility = Visibility.Hidden;
             config_page.Visibility = Visibility.Visible;
+
+
+            try
+            {
+                DriveInfo[] dir = DriveInfo.GetDrives();
+                foreach (DriveInfo item in dir)
+                {
+                    TreeViewItem newItem = new TreeViewItem();
+                    newItem.Header = item.Name;
+                    newItem.Tag = item.Name;
+                    treeView.Items.Add(item);
+                }
+            }
+            catch
+            {
+
+            }
+
         }
 
         private void ShowUrlWindow(object sender, RoutedEventArgs e)
@@ -128,6 +147,47 @@ namespace AutoUpdate
         {
             App.Current.Shutdown();
         }
-        
+
+        private void treeView_Selected(object sender, RoutedEventArgs e)
+        {
+
+            try
+            {
+                //遍历目录
+                TreeViewItem treeViewItem = e.OriginalSource as TreeViewItem;
+                DirectoryInfo dic = new DirectoryInfo(treeViewItem.Header.ToString());
+                DirectoryInfo[] info = dic.GetDirectories();
+                foreach (DirectoryInfo item in info)
+                {
+                    TreeViewItem newItem = new TreeViewItem();
+                    newItem.Header = item.FullName;
+
+                    treeViewItem.Items.Add(newItem);
+                }
+
+
+                var config_grid_list = new List<ConfigureGridData>();
+                config_grid_list.Clear();
+
+
+                //获取目录下文件列表
+                System.IO.FileInfo[] fileinfo = dic.GetFiles();
+                //遍历文件列表
+                foreach (System.IO.FileInfo it in fileinfo)
+                {
+                    config_grid_list.Add(new ConfigureGridData { Picked = false, File = it.Name, Version = "1.0", Time = it.LastWriteTime.ToString(), Hash = "26205fa396afae7e698346556c23f256" });
+                }
+                config_data_grid.ItemsSource = config_grid_list;
+
+
+
+            }
+            catch
+            {
+
+            }
+
+
+        }
     }
 }
