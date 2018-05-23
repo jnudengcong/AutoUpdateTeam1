@@ -14,22 +14,27 @@ namespace AutoUpdate
         private float version;
         private string time;
         private string hash;
-        private int file_count;
         private List<FileInfo> file_list;
 
-        ConFile(string name, float version, string time, string hash, int file_count)
+        public ConFile(string name, float version, string time, string hash)
         {
             this.name = name;
             this.version = version;
             this.time = time;
             this.hash = hash;
-            this.file_count = file_count;
+            this.file_list = new List<FileInfo>();
         }
-        
-        ConFile(string name)
+
+        public ConFile(string name)
         {
             this.name = name;
+            this.file_list = new List<FileInfo>();
             ReadConFile();
+        }
+
+        public void AddFile(FileInfo file_info)
+        {
+            file_list.Add(file_info);
         }
 
         // 生成配置文件
@@ -44,8 +49,8 @@ namespace AutoUpdate
             m_streamWriter.Write(this.version.ToString() + "\n");
             m_streamWriter.Write(this.time.ToString() + "\n");
             m_streamWriter.Write(this.hash.ToString() + "\n");
-            m_streamWriter.Write(this.file_count.ToString() + "\n");
-            
+            m_streamWriter.Write(this.file_list.Count.ToString() + "\n");
+
             foreach (var item in file_list)
             {
                 // 写入配置文件列表中的文件信息
@@ -58,7 +63,7 @@ namespace AutoUpdate
             m_streamWriter.Flush();
             m_streamWriter.Close();
         }
-        
+
         // 读取配置文件
         public void ReadConFile()
         {
@@ -69,7 +74,7 @@ namespace AutoUpdate
             this.version = float.Parse(m_streamReader.ReadLine());
             this.time = m_streamReader.ReadLine();
             this.hash = m_streamReader.ReadLine();
-            this.file_count = int.Parse(m_streamReader.ReadLine());
+            int file_count = int.Parse(m_streamReader.ReadLine());
 
             for (int i = 0; i < file_count; i++)
             {
@@ -78,7 +83,7 @@ namespace AutoUpdate
                 float version = float.Parse(m_streamReader.ReadLine());
                 string hash = m_streamReader.ReadLine();
                 // 先转为int，再强制转换为enum类型
-                FileInfo.UpdateMethod update_method = (FileInfo.UpdateMethod)int.Parse(m_streamReader.ReadLine());
+                FileInfo.UpdateMethod update_method = (FileInfo.UpdateMethod)Enum.Parse(typeof(FileInfo.UpdateMethod), m_streamReader.ReadLine());
                 file_list.Add(new FileInfo(name, version, hash, update_method));
             }
 
@@ -109,7 +114,12 @@ namespace AutoUpdate
 
         public int GetFileCount()
         {
-            return this.file_count;
+            return this.file_list.Count;
+        }
+
+        public List<FileInfo> GetList()
+        {
+            return file_list;
         }
     }
 }

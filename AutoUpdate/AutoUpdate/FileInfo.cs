@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace AutoUpdate
 {
-    
+
     class FileInfo
     {
         public enum UpdateMethod { PARTIAL, WHOLE, REBOOT }
