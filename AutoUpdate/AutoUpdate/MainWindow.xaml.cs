@@ -15,7 +15,6 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
-using System.Diagnostics;
 
 namespace AutoUpdate
 {
@@ -191,9 +190,9 @@ namespace AutoUpdate
                 //获取文件路径，不带文件名
                 string FilePath = localFilePath.Substring(0, localFilePath.LastIndexOf("\\"));
 
-                string full_name = FilePath + "ConFile\\" + fileNameExt;
-                MainWindow.con_file.SetName(full_name);
-                MainWindow.con_file.SetHash(CreateMD5(full_name));
+                string relative_name = "ConFile\\" + fileNameExt;
+                MainWindow.con_file.SetName(relative_name);
+                MainWindow.con_file.SetHash(CreateMD5(relative_name));
                 
                 MainWindow.con_file.SaveConFile();
             }
@@ -289,10 +288,8 @@ namespace AutoUpdate
             string result = a.UpdateType;
 
             string name = a.File;
-            Trace.WriteLine("name: " + name);
             foreach (var item in con_file.GetList())
             {
-                Trace.WriteLine("item name: " + item.GetName());
                 if (item.GetName() == name)
                     return;
             }
