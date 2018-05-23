@@ -34,7 +34,7 @@ namespace AutoUpdate
 
         private void SaveUrl(object sender, RoutedEventArgs e)
         {
-            FileStream fs = new FileStream(@"url.ini", FileMode.Create, FileAccess.Write);
+            FileStream fs = new FileStream(@"url.ini", FileMode.OpenOrCreate, FileAccess.Write);
             StreamWriter m_streamWriter = new StreamWriter(fs);
             m_streamWriter.Flush();
             //设置当前流的位置

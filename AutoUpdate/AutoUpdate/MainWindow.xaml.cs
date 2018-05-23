@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -37,8 +38,12 @@ namespace AutoUpdate
             main_grid_list.Add(new MainGridData { ConFile = "ConFile3", Version = "v1.06", Time = "2017.11.29", Hash = "7889e750271c12eca0dfd8be3639c6b1" });
             main_grid_list.Add(new MainGridData { ConFile = "ConFile4", Version = "v1.2", Time = "2017.12.20", Hash = "cb0c2ee777054e54c51420dfc2e2cf82" });
 
-           
-            
+
+            List<string> comboBoxItems = new List<string>();
+            comboBoxItems.Add("部分更新");
+            comboBoxItems.Add("整体更新");
+            comboBoxItems.Add("部分更新");
+            dataGridComboBoxColumn.ItemsSource = comboBoxItems;
 
         }
 
@@ -203,6 +208,30 @@ namespace AutoUpdate
             }
 
 
+        }
+
+        //checkbox选中事件
+        public void per_row_checkbox_checked(object sender, RoutedEventArgs e)
+        {
+            var a = config_data_grid.SelectedItem as ConfigureGridData;
+
+            string result = a.UpdateType;
+  
+            treeView.Items.Add(result);
+
+
+            //treeView.Items.Add("1111");
+            //var selectItem = this.config_data_grid.SelectedItem as DataGridRow;//!根据点击的item获取集合中的数据
+            //treeView.Items.Add(selectItem);
+            //DataGridRow mySelectedElement = (DataGridRow)config_data_grid.SelectedItem;
+            //string result = mySelectedElement.ToString();
+            //treeView.Items.Add(result);
+        }
+
+        //checkbox取消事件
+        public void per_row_checkbox_unchecked(object sender, RoutedEventArgs e)
+        {
+            treeView.Items.Add("3333");
         }
 
         private void config_data_grid_SelectionChanged(object sender, SelectionChangedEventArgs e)

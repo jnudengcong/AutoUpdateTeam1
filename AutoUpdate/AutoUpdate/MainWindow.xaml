@@ -9,6 +9,10 @@
         Title="自动更新系统" Height="560" Width="800"
         Loaded="WindowLoaded">
 
+    <Window.Resources>
+        <ObjectDataProvider x:Key="comboBoxItems"></ObjectDataProvider>
+    </Window.Resources>
+
     <Grid x:Name="Base_Page">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="127*"/>
@@ -60,14 +64,21 @@
         </Grid>
         <Grid x:Name="config_page" Background="#F0F0F0" Height="502" VerticalAlignment="Top" Margin="0,27,0,0" Grid.ColumnSpan="3">
             <TreeView x:Name="treeView" BorderBrush="Gray" HorizontalAlignment="Left" Height="440" VerticalAlignment="Top" Width="183" TreeViewItem.Selected ="treeView_Selected"/>
-            <DataGrid x:Name="config_data_grid" AutoGenerateColumns="False" BorderBrush="Gray" ItemsSource="{Binding}" HorizontalAlignment="Left" Height="440" Margin="183,0,-0.4,0" VerticalAlignment="Top" Width="611" SelectionChanged="config_data_grid_SelectionChanged">
+            <DataGrid x:Name="config_data_grid" AutoGenerateColumns="False" BorderBrush="Gray" ItemsSource="{Binding ConfigureGridData}" HorizontalAlignment="Left" Height="440" Margin="183,0,-0.4,0" VerticalAlignment="Top" Width="611" SelectionChanged="config_data_grid_SelectionChanged">
                 <DataGrid.Columns>
-                    <DataGridCheckBoxColumn Binding="{Binding Picked}"/>
+                    <DataGridCheckBoxColumn Binding="{Binding Picked}" >
+                        <DataGridCheckBoxColumn.CellStyle>
+                            <Style>
+                                <EventSetter Event="CheckBox.Checked" Handler="per_row_checkbox_checked"/>
+                                <EventSetter Event="CheckBox.Unchecked" Handler="per_row_checkbox_unchecked"/>
+                            </Style>
+                        </DataGridCheckBoxColumn.CellStyle>
+                    </DataGridCheckBoxColumn>
                     <DataGridTextColumn Header="文件" Width="1.2*" Binding="{Binding File}"/>
                     <DataGridTextColumn Header="版本" Width="0.8*" Binding="{Binding Version}"/>
                     <DataGridTextColumn Header="最近更新" Width="1.3*" Binding="{Binding Time}"/>
                     <DataGridTextColumn Header="哈希值" Width="5*" Binding="{Binding Hash}"/>
-                    <DataGridComboBoxColumn Header="更新方式" Width="5*" x:Name="dataGridComboBoxColumn">
+                    <DataGridComboBoxColumn Header="更新方式" Width="5*" x:Name="dataGridComboBoxColumn" SelectedItemBinding="{Binding UpdateType}" ItemsSource="{Binding Source={StaticResource comboBoxItems}}">
 
                     </DataGridComboBoxColumn>
                 </DataGrid.Columns>
