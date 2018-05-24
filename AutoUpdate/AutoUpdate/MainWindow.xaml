@@ -91,6 +91,8 @@
             <Button x:Name="button_back" Content="取消" Click="ShowMainPage"
                     HorizontalAlignment="Left" Margin="650,455,0,0" VerticalAlignment="Top" Height="25" Width="76" RenderTransformOrigin="0.105,0.62"/>
             <Button x:Name="button_create_config" Content="生成版本" Click="ShowVersionWindow" HorizontalAlignment="Left" Margin="530,455,0,0" VerticalAlignment="Top" Height="25" Width="76"/>
+            <TextBox x:Name="setversion_box" HorizontalAlignment="Left" Height="23" Margin="237,457,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="120" TextChanged="textBox_TextChanged"/>
+            <Label x:Name="label1" Content="版本:" HorizontalAlignment="Left" Margin="195,455,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.486,0.04"/>
         </Grid>
 
     </Grid>

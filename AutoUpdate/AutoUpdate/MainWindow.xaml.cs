@@ -376,5 +376,10 @@ namespace AutoUpdate
                 return sb.ToString();
             }
         }
+
+        private void textBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            
+        }
     }
 }
