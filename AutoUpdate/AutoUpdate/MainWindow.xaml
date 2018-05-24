@@ -44,7 +44,7 @@
                            &#x000A;cb0c2ee777054e54c51420dfc2e2cf82" FontSize="16" Margin="15,10,15,10" />
             </Border>
             <Border BorderBrush="Gray" BorderThickness="1, 1, 0, 1" HorizontalAlignment="Left" Height="460" Margin="270,0,0,0" VerticalAlignment="Top" Width="522">
-                <DataGrid x:Name="main_data_grid" Background="White" ItemsSource="{Binding}" AutoGenerateColumns="False" BorderBrush="Gray" Margin="9,35,20,9">
+                <DataGrid x:Name="main_data_grid" Background="White" ItemsSource="{Binding}" AutoGenerateColumns="False" BorderBrush="Gray" Margin="9,35,20,9" CanUserAddRows="False">
                     <DataGrid.Columns>
                         <DataGridTextColumn Header="配置文件" IsReadOnly="True" Width="*" Binding="{Binding ConFile}"/>
                         <DataGridTextColumn Header="版本" IsReadOnly="True" Width="*" Binding="{Binding Version}"/>
@@ -64,7 +64,7 @@
         </Grid>
         <Grid x:Name="config_page" Background="#F0F0F0" Height="502" VerticalAlignment="Top" Margin="0,27,0,0" Grid.ColumnSpan="3">
             <TreeView x:Name="treeView" BorderBrush="Gray" HorizontalAlignment="Left" Height="440" VerticalAlignment="Top" Width="183" TreeViewItem.Selected ="treeView_Selected"/>
-            <DataGrid x:Name="config_data_grid" AutoGenerateColumns="False" BorderBrush="Gray" ItemsSource="{Binding ConfigureGridData}" HorizontalAlignment="Left" Height="440" Margin="183,0,-0.4,0" VerticalAlignment="Top" Width="611">
+            <DataGrid x:Name="config_data_grid" AutoGenerateColumns="False" BorderBrush="Gray" ItemsSource="{Binding ConfigureGridData}" HorizontalAlignment="Left" Height="440" Margin="183,0,0,0" VerticalAlignment="Top" Width="605" CanUserAddRows="False">
                 <DataGrid.Columns>
                     <DataGridCheckBoxColumn Binding="{Binding Picked}" >
                         <DataGridCheckBoxColumn.CellStyle>
