@@ -11,10 +11,12 @@ using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Forms;
 using System.Windows.Input;
+using System.Collections.ObjectModel;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.Diagnostics;
 
 namespace AutoUpdate
 {
@@ -61,7 +63,7 @@ namespace AutoUpdate
             List<string> comboBoxItems = new List<string>();
             comboBoxItems.Add("部分更新");
             comboBoxItems.Add("整体更新");
-            comboBoxItems.Add("部分更新");
+            comboBoxItems.Add("更新后重启");
             dataGridComboBoxColumn.ItemsSource = comboBoxItems;
 
             con_file = new ConFile("confile1", 2.1f, "2018/5/23", "6277e2a7446059985dc9bcf0a4ac1a8f");
@@ -254,11 +256,11 @@ namespace AutoUpdate
                     treeViewItem.Items.Add(tvi);
                 }
 
+                
+                var config_list = new List<ConfigureGridData>();
+                config_list.Clear();
 
-                var config_grid_list = new List<ConfigureGridData>();
-                config_grid_list.Clear();
-
-
+                ObservableCollection<ConfigureGridData> config_grid_list = new ObservableCollection<ConfigureGridData>(config_list);
                 //获取目录下文件列表
                 System.IO.FileInfo[] fileinfo = dic.GetFiles();
                 //遍历文件列表
@@ -284,20 +286,34 @@ namespace AutoUpdate
         {
             //获取当前选中行
             var a = config_data_grid.SelectedItem as ConfigureGridData;
-
-            string result = a.UpdateType;
-
-            string name = a.File;
-            foreach (var item in con_file.GetList())
+            
+            if (a.Picked == false)
             {
-                if (item.GetName() == name)
-                    return;
+                a.Picked = true;
+                Trace.WriteLine(a.Picked);
+                Trace.WriteLine(a.File);
+                Trace.WriteLine(a.UpdateType);
+
+                string name = a.File;
+                foreach (var item in con_file.GetList())
+                {
+                    if (item.GetName() == name)
+                        return;
+                }
+                float version = float.Parse(a.Version);
+                string hash = a.Hash;
+
+
+                FileInfo.UpdateMethod u_method = a.UpdateType == "部分更新" ? FileInfo.UpdateMethod.PARTIAL
+                           : a.UpdateType == "整体更新" ? FileInfo.UpdateMethod.WHOLE
+                           : FileInfo.UpdateMethod.REBOOT;
+
+                FileInfo file_info = new FileInfo(name, version, hash, u_method);
+                con_file.AddFile(file_info);
             }
-            float version = float.Parse(a.Version);
-            string hash = a.Hash;
-            FileInfo.UpdateMethod u_method = FileInfo.UpdateMethod.WHOLE;
-            FileInfo file_info = new FileInfo(name, version, hash, u_method);
-            con_file.AddFile(file_info);
+            
+            
+            
 
             //treeView.Items.Add("1111");
             //var selectItem = this.config_data_grid.SelectedItem as DataGridRow;//!根据点击的item获取集合中的数据
@@ -312,19 +328,36 @@ namespace AutoUpdate
         {
             var a = config_data_grid.SelectedItem as ConfigureGridData;
 
-            for (int i = con_file.GetFileCount() - 1; i >= 0; i--)
+            if (a.Picked == true)
             {
-                if (con_file.GetList()[i].GetName() == a.File)
+                a.Picked = false;
+                Trace.WriteLine(a.Picked);
+                for (int i = con_file.GetFileCount() - 1; i >= 0; i--)
                 {
-                    con_file.GetList().Remove(con_file.GetList()[i]);
+                    if (con_file.GetList()[i].GetName() == a.File)
+                    {
+                        con_file.GetList().Remove(con_file.GetList()[i]);
+                    }
                 }
+            }
+            
+        }
+
+        public void combobox_changed(object sender, SelectionChangedEventArgs e)
+        {
+            var combobox = sender as System.Windows.Controls.ComboBox;
+            var selectedItem = this.config_data_grid.SelectedItem as ConfigureGridData;
+            selectedItem.UpdateType = combobox.SelectedValue.ToString();
+
+            foreach (var item in con_file.GetList())
+            {
+                if (selectedItem.File == item.GetName())
+                    item.SetUpdateMethod(selectedItem.UpdateType == "部分更新" ? FileInfo.UpdateMethod.PARTIAL
+                           : selectedItem.UpdateType == "整体更新" ? FileInfo.UpdateMethod.WHOLE
+                           : FileInfo.UpdateMethod.REBOOT);
             }
         }
 
-        private void config_data_grid_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            
-        }
 
         public static string CreateMD5(string input)
         {

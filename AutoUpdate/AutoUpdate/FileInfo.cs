@@ -38,6 +38,11 @@ namespace AutoUpdate
             return this.hash;
         }
 
+        public void SetUpdateMethod(UpdateMethod update_method)
+        {
+            this.update_method = update_method;
+        }
+
         public UpdateMethod GetUpdateMethod()
         {
             return this.update_method;
