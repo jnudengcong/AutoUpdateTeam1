@@ -22,8 +22,8 @@
 
         <Menu x:Name="menu" HorizontalAlignment="Left" Margin="-2,-1,0,0" VerticalAlignment="Top" Width="794" Height="28" Grid.ColumnSpan="3">
             <MenuItem x:Name="menu_file" Header=" 文件 " Height="28">
-                <MenuItem x:Name="menu_file_create" Header="新建配置文件" Height="28" Click="ShowConfigurePage"/>
-                <MenuItem x:Name="menu_file_open" Header="打开配置文件" Height="28" Click="OpenFileWindow"/>
+                <MenuItem x:Name="menu_file_create" Header="新建配置文件" Height="28" Click="CreateConFile"/>
+                <MenuItem x:Name="menu_file_open" Header="打开配置文件" Height="28" Click="OpenConFile"/>
                 <MenuItem x:Name="menu_file_exit" Header="退出" Height="28" Click="Shutdown"/>
             </MenuItem>
             <MenuItem x:Name="menu_setting" Header=" 设置 " Height="28">
@@ -43,14 +43,14 @@
                 <DataGrid x:Name="main_data_grid" Background="White" ItemsSource="{Binding}" AutoGenerateColumns="False" BorderBrush="Gray" Margin="9,35,20,9" CanUserAddRows="False">
                     <DataGrid.Columns>
                         <DataGridTextColumn Header="配置文件" IsReadOnly="True" Width="*" Binding="{Binding ConFile}"/>
-                        <DataGridTextColumn Header="版本" IsReadOnly="True" Width="*" Binding="{Binding Version}"/>
-                        <DataGridTextColumn Header="创建时间" IsReadOnly="True" Width="*" Binding="{Binding Time}"/>
+                        <DataGridTextColumn Header="版本" IsReadOnly="True" Width="0.7*" Binding="{Binding Version}"/>
+                        <DataGridTextColumn Header="版本发布时间" IsReadOnly="True" Width="*" Binding="{Binding Time}"/>
                         <DataGridTextColumn Header="哈希值" IsReadOnly="True" Width="3*" Binding="{Binding Hash}"/>
                     </DataGrid.Columns>
                     <DataGrid.ContextMenu>
                         <ContextMenu Name="context_menu" StaysOpen="True">
-                            <MenuItem Header="新建" Click="ShowConfigurePage"/>
-                            <MenuItem Header="打开" Click="ShowConfigurePage"/>
+                            <MenuItem Header="新建" Click="CreateConFile"/>
+                            <MenuItem Header="打开" Click="OpenConFile"/>
                             <MenuItem Header="删除"/>
                         </ContextMenu>
                     </DataGrid.ContextMenu>
@@ -60,7 +60,8 @@
         </Grid>
         <Grid x:Name="config_page" Background="#F0F0F0" Height="502" VerticalAlignment="Top" Margin="0,27,0,0" Grid.ColumnSpan="3" d:IsHidden="True">
             <TreeView x:Name="treeView" BorderBrush="Gray" HorizontalAlignment="Left" Height="440" VerticalAlignment="Top" Width="183" TreeViewItem.Selected ="treeView_Selected"/>
-            <DataGrid x:Name="config_data_grid" AutoGenerateColumns="False" BorderBrush="Gray" ItemsSource="{Binding ConfigureGridData}" HorizontalAlignment="Left" Height="440" Margin="183,0,0,0" VerticalAlignment="Top" Width="605" CanUserAddRows="False">
+            <DataGrid x:Name="config_data_grid" AutoGenerateColumns="False" BorderBrush="Gray" ItemsSource="{Binding ConfigureGridData}" 
+                      HorizontalAlignment="Left" Height="440" Margin="183,0,0,0" VerticalAlignment="Top" Width="605" CanUserAddRows="False">
                 <DataGrid.Columns>
                     <DataGridCheckBoxColumn Binding="{Binding Picked}" >
                         <DataGridCheckBoxColumn.CellStyle>

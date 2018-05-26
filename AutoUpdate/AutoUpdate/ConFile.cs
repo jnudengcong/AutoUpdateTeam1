@@ -1,9 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 
 namespace AutoUpdate
@@ -16,22 +13,20 @@ namespace AutoUpdate
         private string hash;
         private List<FileInfo> file_list;
 
-
-        public ConFile(string name, float version, string time)
-        {
-            this.name = name;
-            this.version = version;
-            this.time = DateTime.Now.ToString("yyyy/MM/dd");
-            this.file_list = new List<FileInfo>();
-        }
+        AppInfo app_info = AppInfo.GetInstance();
 
         public ConFile(string name)
         {
             this.name = name;
+            file_list = new List<FileInfo>();
             if (System.IO.File.Exists(name))
             {
-                this.file_list = new List<FileInfo>();
                 ReadConFile();
+            }
+            else
+            {
+                version = app_info.GetVersion() + 0.01f;
+                time = DateTime.Now.ToString("yyyy/MM/dd");
             }
             
         }

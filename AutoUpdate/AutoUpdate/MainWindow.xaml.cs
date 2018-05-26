@@ -23,46 +23,22 @@ namespace AutoUpdate
         public MainWindow()
         {
             InitializeComponent();
+
             // 初始化窗口时先把配置界面隐藏，也可以在xaml中设置，但是xaml的效果是实时的，不方便调试
             config_page.Visibility = Visibility.Hidden;
 
-            // 写死在主界面的数据，通过数据列表的绑定进行显示，还没试过动态删除，具体用法要结合xaml来看
-            var main_grid_list = new List<MainGridData>();
-           
-            DirectoryInfo dic = new DirectoryInfo("ConFile");
-            System.IO.FileInfo[] fileinfo = dic.GetFiles();
-            //遍历文件列表
-            con_file_list = new List<ConFile>();
-            foreach (System.IO.FileInfo it in fileinfo)
-            {
-                con_file_list.Add(new ConFile("ConFile\\" + it.Name));
-            }
-
-            foreach (var it in con_file_list)
-            {
-                main_grid_list.Add(new MainGridData
-                {
-                    
-                    ConFile = it.GetName().Substring(it.GetName().LastIndexOf("\\") + 1),
-                    Version = it.GetVersion().ToString(),
-                    Time = it.GetTime(),
-                    Hash = it.GetHash()
-                });
-            }
-
-            main_data_grid.ItemsSource = main_grid_list;
+            ShowMainPage();
+            info_display(app_info.GetVersion().ToString(), app_info.GetFileCount().ToString(), app_info.GetTime(), app_info.GetHash());
 
             List<string> comboBoxItems = new List<string>();
             comboBoxItems.Add("部分更新");
             comboBoxItems.Add("整体更新");
             comboBoxItems.Add("更新后重启");
             dataGridComboBoxColumn.ItemsSource = comboBoxItems;
-
-            con_file = new ConFile("new_file", app_info.GetVersion() + 0.1f, DateTime.Now.ToString("yyyy/MM/dd"));
+            
             set_version_box.Text = (app_info.GetVersion() + 0.1f).ToString();
             label_warnning.Visibility = Visibility.Hidden;
-            info_display("", "", "", "");
-            info_display(app_info.GetVersion().ToString(), app_info.GetFileCount().ToString(), app_info.GetTime(), app_info.GetHash());
+            
         }
 
         // 主界面中的数据结构
@@ -96,7 +72,7 @@ namespace AutoUpdate
             m_streamReader.BaseStream.Seek(0, SeekOrigin.Begin);
             string url = m_streamReader.ReadLine();
             ConFile con_install = new ConFile(url);
-            if (con_install.GetVersion() > 1.1)
+            if (con_install.GetVersion() > 3.3)
             {
                 UpdateWindow update_window = new UpdateWindow();
                
@@ -108,35 +84,85 @@ namespace AutoUpdate
 
         private void ShowMainPage(object sender, RoutedEventArgs e)
         {
+            ShowMainPage();
+        }
+
+        private void ShowMainPage()
+        {
+            
+            // 写死在主界面的数据，通过数据列表的绑定进行显示，还没试过动态删除，具体用法要结合xaml来看
+            var main_grid_list = new List<MainGridData>();
+
+            DirectoryInfo dic = new DirectoryInfo("ConFile");
+            System.IO.FileInfo[] fileinfo = dic.GetFiles();
+            //遍历文件列表
+            con_file_list = new List<ConFile>();
+            foreach (System.IO.FileInfo it in fileinfo)
+            {
+                con_file_list.Add(new ConFile("ConFile\\" + it.Name));
+            }
+
+            foreach (var it in con_file_list)
+            {
+                main_grid_list.Add(new MainGridData
+                {
+
+                    ConFile = it.GetName().Substring(it.GetName().LastIndexOf("\\") + 1),
+                    Version = it.GetVersion().ToString(),
+                    Time = it.GetTime(),
+                    Hash = it.GetHash()
+                });
+            }
+
+            main_data_grid.ItemsSource = main_grid_list;
+
+            // 返回主界面时如果不加这一句，配置界面的数据不会消除，
+            // 下次再进入配置界面时，由于目录树还未被点击，配置界面不会
+            // 重置，会显示旧数据
+            config_data_grid.ItemsSource = null;
+
             main_page.Visibility = Visibility.Visible;
             config_page.Visibility = Visibility.Hidden;
         }
 
-        private void ShowConfigurePage(object sender, RoutedEventArgs e)
+        private void CreateConFile(object sender, RoutedEventArgs e)
+        {
+            con_file = new ConFile("version.ini");
+            ShowConfigurePage();
+        }
+
+        private void OpenConFile(object sender, RoutedEventArgs e)
+        {
+            OpenFileDialog sfd = new OpenFileDialog();
+            // 设置这个对话框的打开路径  
+            sfd.InitialDirectory = @".\";
+            // 设置需要打开的文件类型，注意过滤器的语法  
+            sfd.Filter = "CONF配置文件|*.conf";
+            // 调用ShowDialog()方法显示该对话框，该方法的返回值代表用户是否点击了确定按钮  
+
+            if (sfd.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+            {
+                con_file = new ConFile(sfd.FileName);
+            }
+            ShowConfigurePage();
+        }
+
+        private void ShowConfigurePage()
         {
             main_page.Visibility = Visibility.Hidden;
             config_page.Visibility = Visibility.Visible;
 
             try
             {
-                //    DriveInfo[] dir = DriveInfo.GetDrives();
-                //    foreach (DriveInfo item in dir)
-                //    {
-                //        TreeViewItem newItem = new TreeViewItem();
-                //        newItem.Header = item.Name;
-                //        newItem.Tag = item.Name;
-                //        treeView.Items.Add(item);
-                //    }
                 treeView.Items.Clear();
                 TreeViewItem tvi = new TreeViewItem();
-                
-                tvi.Header = AppDomain.CurrentDomain.BaseDirectory;
+                // 只获取当前所在的目录名
+                tvi.Header = new DirectoryInfo(AppDomain.CurrentDomain.BaseDirectory).Name;
                 tvi.Tag = AppDomain.CurrentDomain.BaseDirectory;
                 treeView.Items.Add(tvi);
             }
             catch
             {
-
             }
 
         }
@@ -147,18 +173,7 @@ namespace AutoUpdate
             urlWindow.ShowDialog();
         }
 
-        private void OpenFileWindow(object sender, RoutedEventArgs e)
-        {
-            OpenFileDialog sfd = new OpenFileDialog();
-            // 设置这个对话框的打开路径  
-            sfd.InitialDirectory = @".\";
-            // 设置需要打开的文件类型，注意过滤器的语法  
-            sfd.Filter = "CONF配置文件|*.conf";
-            // 调用ShowDialog()方法显示该对话框，该方法的返回值代表用户是否点击了确定按钮  
-            sfd.ShowDialog();
 
-            ShowConfigurePage(sender, e);
-        }
 
         private void ShowVersionWindow(object sender, RoutedEventArgs e)
         {
@@ -180,41 +195,11 @@ namespace AutoUpdate
                 string FilePath = localFilePath.Substring(0, localFilePath.LastIndexOf("\\"));
 
                 string relative_name = "ConFile\\" + fileNameExt;
-                MainWindow.con_file.SetName(relative_name);
+                MainWindow.con_file.SetName(sfd.FileName);
                 MainWindow.con_file.SetHash(app_info.CreateMD5(relative_name));
                 MainWindow.con_file.SaveConFile();
             }
-            var main_grid_list = new List<MainGridData>();
-
-            VersionWindow versionWindow = new VersionWindow();
-            versionWindow.ShowDialog();
-
-            DirectoryInfo dic = new DirectoryInfo("ConFile");
-            System.IO.FileInfo[] fileinfo = dic.GetFiles();
-            //遍历文件列表
-            con_file_list = new List<ConFile>();
-            foreach (System.IO.FileInfo it in fileinfo)
-            {
-                //config_grid_list.Add(new ConfigureGridData { Picked = false, File = it.Name, Version = "1.0", Time = it.LastWriteTime.ToString(), Hash = "26205fa396afae7e698346556c23f256" });
-                con_file_list.Add(new ConFile("ConFile\\" + it.Name));
-            }
-
-            foreach (var it in con_file_list)
-            {
-                main_grid_list.Add(new MainGridData
-                {
-
-                    ConFile = it.GetName().Substring(it.GetName().LastIndexOf("\\") + 1),
-                    Version = it.GetVersion().ToString(),
-                    Time = it.GetTime(),
-                    Hash = it.GetHash()
-                });
-            }
-
-            main_data_grid.ItemsSource = main_grid_list;
-
-            main_page.Visibility = Visibility.Visible;
-            config_page.Visibility = Visibility.Hidden;
+            ShowMainPage();
 
         }
 
@@ -241,23 +226,36 @@ namespace AutoUpdate
                     tvi.Tag = item.FullName;
                     treeViewItem.Items.Add(tvi);
                 }
-
                 
                 var config_list = new List<ConfigureGridData>();
                 config_list.Clear();
 
                 ObservableCollection<ConfigureGridData> config_grid_list = new ObservableCollection<ConfigureGridData>(config_list);
+                config_grid_list.Clear();
                 //获取目录下文件列表
                 System.IO.FileInfo[] fileinfo = dic.GetFiles();
                 //遍历文件列表
                 foreach (System.IO.FileInfo it in fileinfo)
                 {
+                    bool exist = false;
+                    string update_type = "部分更新";
+                    foreach (var item in con_file.GetList())
+                    {
+                        if (item.GetName() == it.Name)
+                        {
+                            exist = true;
+                            update_type = item.GetUpdateMethod() == FileInfo.UpdateMethod.PARTIAL ? "部分更新"
+                                : item.GetUpdateMethod() == FileInfo.UpdateMethod.WHOLE ? "整体更新"
+                                : "更新后重启";
+                        }
+                    }
                     config_grid_list.Add(new ConfigureGridData {
-                        Picked = false,
+                        Picked = exist,
                         File = it.Name,
                         Version = "1.0",
                         Time = it.LastWriteTime.ToString(),
-                        Hash = app_info.CreateMD5(it.Name) });
+                        Hash = app_info.CreateMD5(it.Name),
+                        UpdateType = update_type});
                 }
                 config_data_grid.ItemsSource = config_grid_list;
             }
@@ -271,38 +269,41 @@ namespace AutoUpdate
         public void per_row_checkbox_checked(object sender, RoutedEventArgs e)
         {
             //获取当前选中行
-            var a = config_data_grid.SelectedItem as ConfigureGridData;
-            
-            if (a.Picked == false)
+            var selected_item = config_data_grid.SelectedItem as ConfigureGridData;
+            if (selected_item != null && selected_item.Picked == false)
             {
-                a.Picked = true;
-                Trace.WriteLine(a.Picked);
-                Trace.WriteLine(a.File);
-                Trace.WriteLine(a.UpdateType);
+                selected_item.Picked = true;
+                Trace.WriteLine(selected_item.Picked);
+                Trace.WriteLine(selected_item.File);
+                Trace.WriteLine(selected_item.UpdateType);
 
-                string name = a.File;
+                string name = selected_item.File;
                 foreach (var item in con_file.GetList())
                 {
                     if (item.GetName() == name)
                         return;
                 }
-                float version = float.Parse(a.Version);
-                string hash = a.Hash;
+                float version = float.Parse(selected_item.Version);
+                string hash = selected_item.Hash;
 
-
-                FileInfo.UpdateMethod u_method = a.UpdateType == "部分更新" ? FileInfo.UpdateMethod.PARTIAL
-                           : a.UpdateType == "整体更新" ? FileInfo.UpdateMethod.WHOLE
+                FileInfo.UpdateMethod u_method;
+                if (selected_item.UpdateType == null)
+                {
+                    u_method = FileInfo.UpdateMethod.PARTIAL;
+                    selected_item.UpdateType = "部分更新";
+                }
+                else
+                {
+                    u_method = selected_item.UpdateType == "部分更新" ? FileInfo.UpdateMethod.PARTIAL
+                           : selected_item.UpdateType == "整体更新" ? FileInfo.UpdateMethod.WHOLE
                            : FileInfo.UpdateMethod.REBOOT;
+                }
 
                 FileInfo file_info = new FileInfo(name, version, hash, u_method);
                 con_file.AddFile(file_info);
+                
             }
-            //treeView.Items.Add("1111");
-            //var selectItem = this.config_data_grid.SelectedItem as DataGridRow;//!根据点击的item获取集合中的数据
-            //treeView.Items.Add(selectItem);
-            //DataGridRow mySelectedElement = (DataGridRow)config_data_grid.SelectedItem;
-            //string result = mySelectedElement.ToString();
-            //treeView.Items.Add(result);
+
         }
 
         // checkbox取消事件
@@ -313,6 +314,7 @@ namespace AutoUpdate
             if (a.Picked == true)
             {
                 a.Picked = false;
+                a.UpdateType = null;
                 Trace.WriteLine(a.Picked);
                 for (int i = con_file.GetFileCount() - 1; i >= 0; i--)
                 {
@@ -329,16 +331,16 @@ namespace AutoUpdate
         public void combobox_changed(object sender, SelectionChangedEventArgs e)
         {
             var combobox = sender as System.Windows.Controls.ComboBox;
-            var selectedItem = this.config_data_grid.SelectedItem as ConfigureGridData;
+            var selected_item = this.config_data_grid.SelectedItem as ConfigureGridData;
             if (combobox.SelectedValue != null)
             {
-                selectedItem.UpdateType = combobox.SelectedValue.ToString();
+                selected_item.UpdateType = combobox.SelectedValue.ToString();
 
                 foreach (var item in con_file.GetList())
                 {
-                    if (selectedItem.File == item.GetName())
-                        item.SetUpdateMethod(selectedItem.UpdateType == "部分更新" ? FileInfo.UpdateMethod.PARTIAL
-                               : selectedItem.UpdateType == "整体更新" ? FileInfo.UpdateMethod.WHOLE
+                    if (selected_item.File == item.GetName())
+                        item.SetUpdateMethod(selected_item.UpdateType == "部分更新" ? FileInfo.UpdateMethod.PARTIAL
+                               : selected_item.UpdateType == "整体更新" ? FileInfo.UpdateMethod.WHOLE
                                : FileInfo.UpdateMethod.REBOOT);
                 }
             }
