@@ -26,8 +26,10 @@ namespace AutoUpdate
     
     public partial class MainWindow : Window
     {
+        Info info = Info.GetInstance();
         public static ConFile con_file;
         List<ConFile> con_file_list;
+
         public MainWindow()
         {
             InitializeComponent();
@@ -67,7 +69,6 @@ namespace AutoUpdate
             dataGridComboBoxColumn.ItemsSource = comboBoxItems;
 
             con_file = new ConFile("confile1", 2.1f, "2018/5/23", "6277e2a7446059985dc9bcf0a4ac1a8f");
-
         }
 
         // 主界面中的数据结构
@@ -77,7 +78,6 @@ namespace AutoUpdate
             public string Version { get; set; } 
             public string Time { get; set; }
             public string Hash { get; set; }
-            
         }
 
         // 编辑界面中的数据结构
@@ -88,10 +88,7 @@ namespace AutoUpdate
             public string Version { get; set; }
             public string Time { get; set; }
             public string Hash { get; set; }
-
             public string UpdateType { get; set; }
-
-
     }
 
         // 窗口加载完之后的函数，在xaml中进行了绑定，关键字async异步进行调用，否则无法得到想要的效果
@@ -148,7 +145,6 @@ namespace AutoUpdate
             {
 
             }
-
 
         }
 
@@ -269,15 +265,10 @@ namespace AutoUpdate
                     config_grid_list.Add(new ConfigureGridData { Picked = false, File = it.Name, Version = "1.0", Time = it.LastWriteTime.ToString(), Hash = CreateMD5(it.Name) });
                 }
                 config_data_grid.ItemsSource = config_grid_list;
-
-
-
             }
             catch
             {
-
             }
-
 
         }
 
@@ -311,10 +302,6 @@ namespace AutoUpdate
                 FileInfo file_info = new FileInfo(name, version, hash, u_method);
                 con_file.AddFile(file_info);
             }
-            
-            
-            
-
             //treeView.Items.Add("1111");
             //var selectItem = this.config_data_grid.SelectedItem as DataGridRow;//!根据点击的item获取集合中的数据
             //treeView.Items.Add(selectItem);

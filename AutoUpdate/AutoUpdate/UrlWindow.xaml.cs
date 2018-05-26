@@ -21,30 +21,18 @@ namespace AutoUpdate
     /// </summary>
     public partial class UrlWindow : Window
     {
+        Info info = Info.GetInstance();
+
         public UrlWindow()
         {
             InitializeComponent();
             // 初始化url窗口中的网址
-            FileStream fs = new FileStream(@"url.ini", FileMode.OpenOrCreate, FileAccess.Read);
-            StreamReader m_streamReader = new StreamReader(fs);
-            m_streamReader.BaseStream.Seek(0, SeekOrigin.Begin);
-            string strLine = m_streamReader.ReadLine();
-            url_text.Text = strLine;
-            m_streamReader.Close();
+            url_text.Text = info.GetUrl();
         }
 
         private void SaveUrl(object sender, RoutedEventArgs e)
         {
-            FileStream fs = new FileStream(@"url.ini", FileMode.OpenOrCreate, FileAccess.Write);
-            StreamWriter m_streamWriter = new StreamWriter(fs);
-            m_streamWriter.Flush();
-            //设置当前流的位置
-            m_streamWriter.BaseStream.Seek(0, SeekOrigin.Begin);
-            //写入内容
-            m_streamWriter.Write(url_text.Text);
-            //关闭此文件
-            m_streamWriter.Flush();
-            m_streamWriter.Close();
+            info.SaveUrl(url_text.Text);
             this.Close();
         }
 
