@@ -7,12 +7,12 @@ using System.Threading.Tasks;
 
 namespace AutoUpdate
 {
-    class Info
+    class AppInfo
     {
-        private static Info instance;
+        private static AppInfo instance;
 
         private string name;
-        private float version;
+        private float current_version;
         private string time;
         private string hash;
         private List<FileInfo> file_list;
@@ -21,7 +21,7 @@ namespace AutoUpdate
 
         private static readonly object locker = new object();
 
-        private Info()
+        private AppInfo()
         {
             // 读取当前版本的配置信息
             name = "version.ini";
@@ -30,7 +30,7 @@ namespace AutoUpdate
             StreamReader m_streamReader = new StreamReader(fs);
             m_streamReader.BaseStream.Seek(0, SeekOrigin.Begin);
             // 读取配置文件自身的信息
-            this.version = float.Parse(m_streamReader.ReadLine());
+            this.current_version = float.Parse(m_streamReader.ReadLine());
             this.time = m_streamReader.ReadLine();
             this.hash = m_streamReader.ReadLine();
             int file_count = int.Parse(m_streamReader.ReadLine());
@@ -55,7 +55,7 @@ namespace AutoUpdate
             m_streamReader.Close();
         }
 
-        public static Info GetInstance()
+        public static AppInfo GetInstance()
         {
             if (instance == null)
             {
@@ -63,7 +63,7 @@ namespace AutoUpdate
                 {
                     if (instance == null)
                     {
-                        instance = new Info();
+                        instance = new AppInfo();
                     }
                 }
             }
@@ -90,19 +90,41 @@ namespace AutoUpdate
             m_streamWriter.Close();
         }
 
+        public string CreateMD5(string input)
+        {
+            // Use input string to calculate MD5 hash
+            using (System.Security.Cryptography.MD5 md5 = System.Security.Cryptography.MD5.Create())
+            {
+                byte[] inputBytes = System.Text.Encoding.ASCII.GetBytes(input);
+                byte[] hashBytes = md5.ComputeHash(inputBytes);
+                // Convert the byte array to hexadecimal string
+                StringBuilder sb = new StringBuilder();
+                for (int i = 0; i < hashBytes.Length; i++)
+                {
+                    sb.Append(hashBytes[i].ToString("X2"));
+                }
+                return sb.ToString();
+            }
+        }
+
+        public void SaveVersion(ConFile con_file)
+        {
+
+        }
+
         public float GetVersion()
         {
-            return this.version;
+            return current_version;
         }
 
         public string GetTime()
         {
-            return this.time;
+            return time;
         }
 
         public string GetHash()
         {
-            return this.hash;
+            return hash;
         }
 
         public int GetFileCount()

@@ -17,12 +17,11 @@ namespace AutoUpdate
         private List<FileInfo> file_list;
 
 
-        public ConFile(string name, float version, string time, string hash)
+        public ConFile(string name, float version, string time)
         {
             this.name = name;
             this.version = version;
-            this.time = time;
-            this.hash = hash;
+            this.time = DateTime.Now.ToString("yyyy/MM/dd");
             this.file_list = new List<FileInfo>();
         }
 

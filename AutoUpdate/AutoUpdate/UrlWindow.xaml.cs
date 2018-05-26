@@ -21,7 +21,7 @@ namespace AutoUpdate
     /// </summary>
     public partial class UrlWindow : Window
     {
-        Info info = Info.GetInstance();
+        AppInfo info = AppInfo.GetInstance();
 
         public UrlWindow()
         {

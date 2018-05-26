@@ -1,22 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data;
 using System.IO;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Forms;
-using System.Windows.Input;
 using System.Collections.ObjectModel;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
-using System.Diagnostics;
+using System.Diagnostics;  // 用于调试的类,使用Trace.Write(str)输出信息
 
 namespace AutoUpdate
 {
@@ -26,7 +16,7 @@ namespace AutoUpdate
     
     public partial class MainWindow : Window
     {
-        Info info = Info.GetInstance();
+        AppInfo app_info = AppInfo.GetInstance();
         public static ConFile con_file;
         List<ConFile> con_file_list;
 
@@ -68,7 +58,11 @@ namespace AutoUpdate
             comboBoxItems.Add("更新后重启");
             dataGridComboBoxColumn.ItemsSource = comboBoxItems;
 
-            con_file = new ConFile("confile1", 2.1f, "2018/5/23", "6277e2a7446059985dc9bcf0a4ac1a8f");
+            con_file = new ConFile("new_file", app_info.GetVersion() + 0.1f, DateTime.Now.ToString("yyyy/MM/dd"));
+            set_version_box.Text = (app_info.GetVersion() + 0.1f).ToString();
+            label_warnning.Visibility = Visibility.Hidden;
+            info_display("", "", "", "");
+            info_display(app_info.GetVersion().ToString(), app_info.GetFileCount().ToString(), app_info.GetTime(), app_info.GetHash());
         }
 
         // 主界面中的数据结构
@@ -122,7 +116,6 @@ namespace AutoUpdate
         {
             main_page.Visibility = Visibility.Hidden;
             config_page.Visibility = Visibility.Visible;
-
 
             try
             {
@@ -181,17 +174,14 @@ namespace AutoUpdate
             {
                 //获得文件路径
                 string localFilePath = sfd.FileName.ToString();
-
                 //获取文件名，不带路径
                 string fileNameExt = localFilePath.Substring(localFilePath.LastIndexOf("\\") + 1);
-
                 //获取文件路径，不带文件名
                 string FilePath = localFilePath.Substring(0, localFilePath.LastIndexOf("\\"));
 
                 string relative_name = "ConFile\\" + fileNameExt;
                 MainWindow.con_file.SetName(relative_name);
-                MainWindow.con_file.SetHash(CreateMD5(relative_name));
-                
+                MainWindow.con_file.SetHash(app_info.CreateMD5(relative_name));
                 MainWindow.con_file.SaveConFile();
             }
             var main_grid_list = new List<MainGridData>();
@@ -262,7 +252,12 @@ namespace AutoUpdate
                 //遍历文件列表
                 foreach (System.IO.FileInfo it in fileinfo)
                 {
-                    config_grid_list.Add(new ConfigureGridData { Picked = false, File = it.Name, Version = "1.0", Time = it.LastWriteTime.ToString(), Hash = CreateMD5(it.Name) });
+                    config_grid_list.Add(new ConfigureGridData {
+                        Picked = false,
+                        File = it.Name,
+                        Version = "1.0",
+                        Time = it.LastWriteTime.ToString(),
+                        Hash = app_info.CreateMD5(it.Name) });
                 }
                 config_data_grid.ItemsSource = config_grid_list;
             }
@@ -272,7 +267,7 @@ namespace AutoUpdate
 
         }
 
-        //checkbox选中事件
+        // checkbox选中事件
         public void per_row_checkbox_checked(object sender, RoutedEventArgs e)
         {
             //获取当前选中行
@@ -310,7 +305,7 @@ namespace AutoUpdate
             //treeView.Items.Add(result);
         }
 
-        //checkbox取消事件
+        // checkbox取消事件
         public void per_row_checkbox_unchecked(object sender, RoutedEventArgs e)
         {
             var a = config_data_grid.SelectedItem as ConfigureGridData;
@@ -330,43 +325,49 @@ namespace AutoUpdate
             
         }
 
+        // combobox内容改变事件
         public void combobox_changed(object sender, SelectionChangedEventArgs e)
         {
             var combobox = sender as System.Windows.Controls.ComboBox;
             var selectedItem = this.config_data_grid.SelectedItem as ConfigureGridData;
-            selectedItem.UpdateType = combobox.SelectedValue.ToString();
-
-            foreach (var item in con_file.GetList())
+            if (combobox.SelectedValue != null)
             {
-                if (selectedItem.File == item.GetName())
-                    item.SetUpdateMethod(selectedItem.UpdateType == "部分更新" ? FileInfo.UpdateMethod.PARTIAL
-                           : selectedItem.UpdateType == "整体更新" ? FileInfo.UpdateMethod.WHOLE
-                           : FileInfo.UpdateMethod.REBOOT);
-            }
-        }
+                selectedItem.UpdateType = combobox.SelectedValue.ToString();
 
-
-        public static string CreateMD5(string input)
-        {
-            // Use input string to calculate MD5 hash
-            using (System.Security.Cryptography.MD5 md5 = System.Security.Cryptography.MD5.Create())
-            {
-                byte[] inputBytes = System.Text.Encoding.ASCII.GetBytes(input);
-                byte[] hashBytes = md5.ComputeHash(inputBytes);
-
-                // Convert the byte array to hexadecimal string
-                StringBuilder sb = new StringBuilder();
-                for (int i = 0; i < hashBytes.Length; i++)
+                foreach (var item in con_file.GetList())
                 {
-                    sb.Append(hashBytes[i].ToString("X2"));
+                    if (selectedItem.File == item.GetName())
+                        item.SetUpdateMethod(selectedItem.UpdateType == "部分更新" ? FileInfo.UpdateMethod.PARTIAL
+                               : selectedItem.UpdateType == "整体更新" ? FileInfo.UpdateMethod.WHOLE
+                               : FileInfo.UpdateMethod.REBOOT);
                 }
-                return sb.ToString();
+            }
+            
+        }
+
+        // 输入的版本不合法或不高于当前版本时，会进行提示
+        private void version_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            float result = 0;
+            if (float.TryParse(set_version_box.Text, out result))
+            {
+                if (result > app_info.GetVersion())
+                    label_warnning.Visibility = Visibility.Hidden;
+                else
+                    label_warnning.Visibility = Visibility.Visible;
+            }
+            else
+            {
+                label_warnning.Visibility = Visibility.Hidden;
             }
         }
 
-        private void textBox_TextChanged(object sender, TextChangedEventArgs e)
+        private void info_display(string version, string file_count, string time, string hash)
         {
-            
+            info_display_text.Text = "\n当前版本： " + version +
+                                    "\n\n文件数量： " + file_count +
+                                    "\n\n版本发布时间： " + time +
+                                    "\n\n配置文件哈希：\n" + hash;
         }
     }
 }

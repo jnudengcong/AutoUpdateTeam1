@@ -35,13 +35,9 @@
                 <MenuItem Header="关于自动更新系统" />
             </MenuItem>
         </Menu>
-        <Grid x:Name="main_page" Background="#F0F0F0"  HorizontalAlignment="Left" Height="508" Margin="0,27,0,-6" VerticalAlignment="Top" Width="792" Grid.ColumnSpan="3" d:IsHidden="True">
+        <Grid x:Name="main_page" Background="#F0F0F0"  HorizontalAlignment="Left" Height="508" Margin="0,27,0,-6" VerticalAlignment="Top" Width="792" Grid.ColumnSpan="3">
             <Border Background="#E6EBF0" BorderBrush="Gray" BorderThickness="0, 1, 1, 1" HorizontalAlignment="Left" Height="460" VerticalAlignment="Top" Width="270">
-                <TextBlock x:Name="textBlock" TextWrapping="Wrap"
-                           Text="当前版本： 1.2&#x000A;&#x000A;占用空间： 34MB&#x000A;
-                           &#x000A;文件数量： 15个文件，2个文件夹&#x000A;&#x000A;更新时间： 2017.12.20&#x000A;
-                           &#x000A;配置文件哈希：
-                           &#x000A;cb0c2ee777054e54c51420dfc2e2cf82" FontSize="16" Margin="15,10,15,10" />
+                <TextBlock x:Name="info_display_text" TextWrapping="Wrap" FontSize="16" Margin="15,10,15,10" />
             </Border>
             <Border BorderBrush="Gray" BorderThickness="1, 1, 0, 1" HorizontalAlignment="Left" Height="460" Margin="270,0,0,0" VerticalAlignment="Top" Width="522">
                 <DataGrid x:Name="main_data_grid" Background="White" ItemsSource="{Binding}" AutoGenerateColumns="False" BorderBrush="Gray" Margin="9,35,20,9" CanUserAddRows="False">
@@ -62,7 +58,7 @@
             </Border>
             <Label x:Name="label" FontSize="20" Content="历史版本" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="280,0,0,0" Height="36" Width="100"/>
         </Grid>
-        <Grid x:Name="config_page" Background="#F0F0F0" Height="502" VerticalAlignment="Top" Margin="0,27,0,0" Grid.ColumnSpan="3">
+        <Grid x:Name="config_page" Background="#F0F0F0" Height="502" VerticalAlignment="Top" Margin="0,27,0,0" Grid.ColumnSpan="3" d:IsHidden="True">
             <TreeView x:Name="treeView" BorderBrush="Gray" HorizontalAlignment="Left" Height="440" VerticalAlignment="Top" Width="183" TreeViewItem.Selected ="treeView_Selected"/>
             <DataGrid x:Name="config_data_grid" AutoGenerateColumns="False" BorderBrush="Gray" ItemsSource="{Binding ConfigureGridData}" HorizontalAlignment="Left" Height="440" Margin="183,0,0,0" VerticalAlignment="Top" Width="605" CanUserAddRows="False">
                 <DataGrid.Columns>
@@ -91,8 +87,9 @@
             <Button x:Name="button_back" Content="取消" Click="ShowMainPage"
                     HorizontalAlignment="Left" Margin="650,455,0,0" VerticalAlignment="Top" Height="25" Width="76" RenderTransformOrigin="0.105,0.62"/>
             <Button x:Name="button_create_config" Content="生成版本" Click="ShowVersionWindow" HorizontalAlignment="Left" Margin="530,455,0,0" VerticalAlignment="Top" Height="25" Width="76"/>
-            <TextBox x:Name="setversion_box" HorizontalAlignment="Left" Height="23" Margin="237,457,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="120" TextChanged="textBox_TextChanged"/>
-            <Label x:Name="label1" Content="版本:" HorizontalAlignment="Left" Margin="195,455,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.486,0.04"/>
+            <TextBox x:Name="set_version_box" HorizontalAlignment="Left" Height="23" Margin="185,457,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="120" TextChanged="version_TextChanged"  VerticalContentAlignment="Center"/>
+            <Label x:Name="label_version" Content="版本:" HorizontalAlignment="Left" Margin="143,455,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.486,0.04"/>
+            <Label x:Name="label_warnning" Content="必须高于当前版本!" HorizontalAlignment="Left" Margin="310,455,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.486,0.04" Width="137"/>
         </Grid>
 
     </Grid>

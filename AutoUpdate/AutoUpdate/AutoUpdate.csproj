@@ -60,7 +60,7 @@
     </ApplicationDefinition>
     <Compile Include="ConFile.cs" />
     <Compile Include="FileInfo.cs" />
-    <Compile Include="Info.cs" />
+    <Compile Include="AppInfo.cs" />
     <Compile Include="UpdateWindow.xaml.cs">
       <DependentUpon>UpdateWindow.xaml</DependentUpon>
     </Compile>
