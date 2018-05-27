@@ -30,7 +30,7 @@
                 <MenuItem x:Name="menu_setting_url" Header="设置网址" Height="28" Click="ShowUrlWindow"/>
             </MenuItem>
             <MenuItem x:Name="menu_help" Header=" 帮助 ">
-                <MenuItem Header="查看帮助" />
+                <MenuItem Header="查看帮助"/>
                 <MenuItem Header="发送反馈" />
                 <MenuItem Header="关于自动更新系统" />
             </MenuItem>

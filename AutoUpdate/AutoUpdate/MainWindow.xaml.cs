@@ -18,6 +18,7 @@ namespace AutoUpdate
     {
         AppInfo app_info = AppInfo.GetInstance();
         public static ConFile con_file;
+        string relative_path;   // 配置界面显示的文件所在的相对路径
 
         public MainWindow()
         {
@@ -35,7 +36,7 @@ namespace AutoUpdate
             comboBoxItems.Add("更新后重启");
             dataGridComboBoxColumn.ItemsSource = comboBoxItems;
             
-            set_version_box.Text = (app_info.GetVersion() + 0.1f).ToString();
+            set_version_box.Text = (app_info.GetVersion() + 0.01f).ToString();
             label_warnning.Visibility = Visibility.Hidden;
             
         }
@@ -187,27 +188,40 @@ namespace AutoUpdate
         }
 
 
-
+        // 生成版本
         private void ShowVersionWindow(object sender, RoutedEventArgs e)
         {
             
-            SaveFileDialog sfd = new SaveFileDialog();
-            // 设置这个对话框的起始保存路径  
-            sfd.InitialDirectory = @".\";
-            // 设置保存的文件的类型，注意过滤器的语法  
-            sfd.Filter = "CONF配置文件|*.conf";
-            // 调用ShowDialog()方法显示该对话框，该方法的返回值代表用户是否点击了确定按钮  
-
-            if (sfd.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+            if (float.TryParse(set_version_box.Text, out float result) && result > app_info.GetVersion())
             {
-                MainWindow.con_file.SetName(sfd.FileName);
-                MainWindow.con_file.SetVersion(float.Parse(set_version_box.Text));
-                MainWindow.con_file.SetTime(DateTime.Now.ToString("yyyy/MM/dd"));
-                MainWindow.con_file.SetHash(app_info.CreateMD5(sfd.FileName));  // TODO: 这里需要相对路径，暂时没有改
-                MainWindow.con_file.SaveConFile();
-                app_info.AddHistory(sfd.FileName);
+                SaveFileDialog sfd = new SaveFileDialog();
+                // 设置这个对话框的起始保存路径  
+                sfd.InitialDirectory = @".\";
+                // 设置保存的文件的类型，注意过滤器的语法  
+                sfd.Filter = "CONF配置文件|*.conf";
+                // 调用ShowDialog()方法显示该对话框，该方法的返回值代表用户是否点击了确定按钮  
+                foreach (var item in con_file.GetList())
+                    Trace.WriteLine(item.GetName());
+                if (sfd.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+                {
+                    MainWindow.con_file.SetName(sfd.FileName);
+                    MainWindow.con_file.SetVersion(float.Parse(set_version_box.Text));
+                    MainWindow.con_file.SetTime(DateTime.Now.ToString("yyyy/MM/dd"));
+                    MainWindow.con_file.SetHash(app_info.CreateMD5(sfd.FileName));  // TODO: 这里需要相对路径，暂时没有改
+                    MainWindow.con_file.SaveConFile();
+                    app_info.AddHistory(sfd.FileName);
+
+                    // 对文件进行打包
+                    string target_dir = sfd.FileName.Substring(0, sfd.FileName.LastIndexOf("\\"));
+                    Pack pack = new Pack();
+                    foreach (var item in con_file.GetList())
+                    {
+                        pack.AddSourceFile(item.GetName());
+                    }
+                    pack.PackFile(target_dir + "\\" + "Package");
+                }
+                ShowMainPage();
             }
-            ShowMainPage();
         }
 
         // 关闭程序
@@ -226,6 +240,7 @@ namespace AutoUpdate
                 treeViewItem.Items.Clear();
                 DirectoryInfo dic = new DirectoryInfo(treeViewItem.Tag.ToString());
                 DirectoryInfo[] info = dic.GetDirectories();
+                relative_path = dic.FullName.Substring(AppDomain.CurrentDomain.BaseDirectory.Length);
                 foreach (DirectoryInfo item in info)
                 {
                     TreeViewItem tvi = new TreeViewItem();
@@ -248,7 +263,9 @@ namespace AutoUpdate
                     string update_type = "部分更新";
                     foreach (var item in con_file.GetList())
                     {
-                        if (item.GetName() == it.Name)
+                        // 文件名是以相对路径的形式保存的，这里对相对路径名进行比较
+                        string tmp_name = string.IsNullOrEmpty(relative_path) ? it.Name : relative_path + "\\" + it.Name;
+                        if (item.GetName() == tmp_name)
                         {
                             exist = true;
                             update_type = item.GetUpdateMethod() == FileInfo.UpdateMethod.PARTIAL ? "部分更新"
@@ -280,11 +297,7 @@ namespace AutoUpdate
             if (selected_item != null && selected_item.Picked == false)
             {
                 selected_item.Picked = true;
-                Trace.WriteLine(selected_item.Picked);
-                Trace.WriteLine(selected_item.File);
-                Trace.WriteLine(selected_item.UpdateType);
-
-                string name = selected_item.File;
+                string name = string.IsNullOrEmpty(relative_path) ? selected_item.File : relative_path + "\\" + selected_item.File;
                 foreach (var item in con_file.GetList())
                 {
                     if (item.GetName() == name)
@@ -322,7 +335,6 @@ namespace AutoUpdate
             {
                 a.Picked = false;
                 a.UpdateType = null;
-                Trace.WriteLine(a.Picked);
                 for (int i = con_file.GetFileCount() - 1; i >= 0; i--)
                 {
                     if (con_file.GetList()[i].GetName() == a.File)
@@ -345,7 +357,9 @@ namespace AutoUpdate
 
                 foreach (var item in con_file.GetList())
                 {
-                    if (selected_item.File == item.GetName())
+                    // 比较相对路径名
+                    string tmp_name = string.IsNullOrEmpty(relative_path) ? selected_item.File : relative_path + "\\" + selected_item.File;
+                    if (item.GetName() == tmp_name)
                         item.SetUpdateMethod(selected_item.UpdateType == "部分更新" ? FileInfo.UpdateMethod.PARTIAL
                                : selected_item.UpdateType == "整体更新" ? FileInfo.UpdateMethod.WHOLE
                                : FileInfo.UpdateMethod.REBOOT);
@@ -378,5 +392,6 @@ namespace AutoUpdate
                                     "\n\n版本发布时间： " + time +
                                     "\n\n配置文件哈希：\n" + hash;
         }
+
     }
 }
