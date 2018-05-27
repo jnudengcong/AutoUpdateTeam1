@@ -18,7 +18,6 @@ namespace AutoUpdate
     {
         AppInfo app_info = AppInfo.GetInstance();
         public static ConFile con_file;
-        List<ConFile> con_file_list;
 
         public MainWindow()
         {
@@ -90,27 +89,18 @@ namespace AutoUpdate
         private void ShowMainPage()
         {
             
-            // 写死在主界面的数据，通过数据列表的绑定进行显示，还没试过动态删除，具体用法要结合xaml来看
             var main_grid_list = new List<MainGridData>();
 
-            DirectoryInfo dic = new DirectoryInfo("ConFile");
-            System.IO.FileInfo[] fileinfo = dic.GetFiles();
-            //遍历文件列表
-            con_file_list = new List<ConFile>();
-            foreach (System.IO.FileInfo it in fileinfo)
+            // 遍历文件列表
+            foreach (var item in app_info.GetHistoryList())
             {
-                con_file_list.Add(new ConFile("ConFile\\" + it.Name));
-            }
-
-            foreach (var it in con_file_list)
-            {
+                ConFile con = new ConFile(item);
                 main_grid_list.Add(new MainGridData
                 {
-
-                    ConFile = it.GetName().Substring(it.GetName().LastIndexOf("\\") + 1),
-                    Version = it.GetVersion().ToString(),
-                    Time = it.GetTime(),
-                    Hash = it.GetHash()
+                    ConFile = con.GetName().Substring(con.GetName().LastIndexOf("\\") + 1),
+                    Version = con.GetVersion().ToString(),
+                    Time = con.GetTime(),
+                    Hash = con.GetHash()
                 });
             }
 
@@ -145,6 +135,29 @@ namespace AutoUpdate
                 con_file = new ConFile(sfd.FileName);
             }
             ShowConfigurePage();
+        }
+
+        private void OpenConFile_Clicked(object sender, RoutedEventArgs e)
+        {
+            // 获取配置文件的索引
+            var index = main_data_grid.SelectedIndex;
+            if (index > -1)
+            {
+                string file_path = app_info.GetHistoryList()[index];
+                con_file = new ConFile(file_path);
+            }
+            ShowConfigurePage();
+        }
+
+        private void RemoveConFile(object sender, RoutedEventArgs e)
+        {
+            var index = main_data_grid.SelectedIndex;
+            if (index > -1)
+            {
+                string file_path = app_info.GetHistoryList()[index];
+                app_info.RemoveHistory(file_path);
+            }
+            ShowMainPage();
         }
 
         private void ShowConfigurePage()
@@ -187,20 +200,14 @@ namespace AutoUpdate
 
             if (sfd.ShowDialog() == System.Windows.Forms.DialogResult.OK)
             {
-                //获得文件路径
-                string localFilePath = sfd.FileName.ToString();
-                //获取文件名，不带路径
-                string fileNameExt = localFilePath.Substring(localFilePath.LastIndexOf("\\") + 1);
-                //获取文件路径，不带文件名
-                string FilePath = localFilePath.Substring(0, localFilePath.LastIndexOf("\\"));
-
-                string relative_name = "ConFile\\" + fileNameExt;
                 MainWindow.con_file.SetName(sfd.FileName);
-                MainWindow.con_file.SetHash(app_info.CreateMD5(relative_name));
+                MainWindow.con_file.SetVersion(float.Parse(set_version_box.Text));
+                MainWindow.con_file.SetTime(DateTime.Now.ToString("yyyy/MM/dd"));
+                MainWindow.con_file.SetHash(app_info.CreateMD5(sfd.FileName));  // TODO: 这里需要相对路径，暂时没有改
                 MainWindow.con_file.SaveConFile();
+                app_info.AddHistory(sfd.FileName);
             }
             ShowMainPage();
-
         }
 
         // 关闭程序

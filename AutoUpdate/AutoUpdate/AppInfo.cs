@@ -9,14 +9,22 @@ namespace AutoUpdate
 {
     class AppInfo
     {
+        // 实例，用于单例模式
         private static AppInfo instance;
+        
 
+        // 当前版本的信息
         private string name;
         private float current_version;
         private string time;
         private string hash;
         private List<FileInfo> file_list;
 
+        // 配置文件历史
+        private string history_file;    // history.ini，记录生成的配置文件的绝对路径
+        private List<string> history_file_list;     // 记录history.ini中能找到的文件路径，找不到的丢弃，生成新的history.ini文件
+
+        // url
         private string url;
 
         private static readonly object locker = new object();
@@ -47,6 +55,25 @@ namespace AutoUpdate
             }
             m_streamReader.Close();
 
+
+            // 从history.ini中读取配置文件历史
+            history_file = "history.ini";
+            history_file_list = new List<string>();
+            fs = new FileStream(history_file, FileMode.OpenOrCreate, FileAccess.Read);
+            m_streamReader = new StreamReader(fs);
+            m_streamReader.BaseStream.Seek(0, SeekOrigin.Begin);
+            string file;
+            while ((file = m_streamReader.ReadLine()) != null)
+            {
+                if (System.IO.File.Exists(file))
+                {
+                    history_file_list.Add(file);    // 能找到的文件才添加到列表中
+                }
+            }
+            m_streamReader.Close();
+            SaveHistory();  // 读取完后把数据重新写回history.ini
+
+
             // 从url.ini获取设置的网址
             fs = new FileStream(@"url.ini", FileMode.OpenOrCreate, FileAccess.Read);
             m_streamReader = new StreamReader(fs);
@@ -68,6 +95,45 @@ namespace AutoUpdate
                 }
             }
             return instance;
+        }
+
+        public void AddHistory(string file_path)
+        {
+            history_file_list.Add(file_path);
+            SaveHistory();
+        }
+
+        public void RemoveHistory(string file_path)
+        {
+            if (File.Exists(file_path))
+                File.Delete(file_path);
+            for (int i = history_file_list.Count - 1; i >= 0; i--)
+            {
+                if (history_file_list[i] == file_path)
+                {
+                    history_file_list.Remove(file_path);
+                }
+            }
+            SaveHistory();
+        }
+
+        public void SaveHistory()
+        {
+            FileStream fs = new FileStream(history_file, FileMode.Create, FileAccess.Write);
+            StreamWriter m_streamWriter = new StreamWriter(fs);
+            m_streamWriter.Flush();
+            m_streamWriter.BaseStream.Seek(0, SeekOrigin.Begin);
+            foreach (var item in history_file_list)
+            {
+                m_streamWriter.WriteLine(item);
+            }
+            m_streamWriter.Flush();
+            m_streamWriter.Close();
+        }
+
+        public List<string> GetHistoryList()
+        {
+            return history_file_list;
         }
 
         public string GetUrl()

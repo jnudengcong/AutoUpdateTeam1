@@ -12,8 +12,7 @@ namespace AutoUpdate
         private string time;
         private string hash;
         private List<FileInfo> file_list;
-
-        AppInfo app_info = AppInfo.GetInstance();
+        
 
         public ConFile(string name)
         {
@@ -25,6 +24,7 @@ namespace AutoUpdate
             }
             else
             {
+                AppInfo app_info = AppInfo.GetInstance();
                 version = app_info.GetVersion() + 0.01f;
                 time = DateTime.Now.ToString("yyyy/MM/dd");
             }
@@ -101,9 +101,19 @@ namespace AutoUpdate
             return this.name;
         }
 
+        public void SetVersion(float version)
+        {
+            this.version = version;
+        }
+
         public float GetVersion()
         {
             return this.version;
+        }
+
+        public void SetTime(string time)
+        {
+            this.time = time;
         }
 
         public string GetTime()

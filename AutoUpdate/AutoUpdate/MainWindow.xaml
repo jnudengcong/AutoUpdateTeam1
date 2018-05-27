@@ -40,7 +40,7 @@
                 <TextBlock x:Name="info_display_text" TextWrapping="Wrap" FontSize="16" Margin="15,10,15,10" />
             </Border>
             <Border BorderBrush="Gray" BorderThickness="1, 1, 0, 1" HorizontalAlignment="Left" Height="460" Margin="270,0,0,0" VerticalAlignment="Top" Width="522">
-                <DataGrid x:Name="main_data_grid" Background="White" ItemsSource="{Binding}" AutoGenerateColumns="False" BorderBrush="Gray" Margin="9,35,20,9" CanUserAddRows="False">
+                <DataGrid x:Name="main_data_grid" Background="White" ItemsSource="{Binding MainGridData}" AutoGenerateColumns="False" BorderBrush="Gray" Margin="9,35,20,9" CanUserAddRows="False">
                     <DataGrid.Columns>
                         <DataGridTextColumn Header="配置文件" IsReadOnly="True" Width="*" Binding="{Binding ConFile}"/>
                         <DataGridTextColumn Header="版本" IsReadOnly="True" Width="0.7*" Binding="{Binding Version}"/>
@@ -50,13 +50,13 @@
                     <DataGrid.ContextMenu>
                         <ContextMenu Name="context_menu" StaysOpen="True">
                             <MenuItem Header="新建" Click="CreateConFile"/>
-                            <MenuItem Header="打开" Click="OpenConFile"/>
-                            <MenuItem Header="删除"/>
+                            <MenuItem Header="打开" Click="OpenConFile_Clicked"/>
+                            <MenuItem Header="删除" Click="RemoveConFile"/>
                         </ContextMenu>
                     </DataGrid.ContextMenu>
                 </DataGrid>
             </Border>
-            <Label x:Name="label" FontSize="20" Content="历史版本" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="280,0,0,0" Height="36" Width="100"/>
+            <Label x:Name="label" FontSize="20" Content="配置文件历史" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="280,0,0,0" Height="36" Width="169"/>
         </Grid>
         <Grid x:Name="config_page" Background="#F0F0F0" Height="502" VerticalAlignment="Top" Margin="0,27,0,0" Grid.ColumnSpan="3" d:IsHidden="True">
             <TreeView x:Name="treeView" BorderBrush="Gray" HorizontalAlignment="Left" Height="440" VerticalAlignment="Top" Width="183" TreeViewItem.Selected ="treeView_Selected"/>
