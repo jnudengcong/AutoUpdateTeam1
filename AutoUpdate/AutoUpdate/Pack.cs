@@ -46,5 +46,10 @@ namespace AutoUpdate
                 Directory.Delete(target_dir, true);
             }
         }
+
+        public void ExtractFile(string zip_file)
+        {
+            ZipFile.ExtractToDirectory(zip_file, ".\\");
+        }
     }
 }

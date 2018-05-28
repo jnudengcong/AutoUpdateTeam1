@@ -393,5 +393,18 @@ namespace AutoUpdate
                                     "\n\n配置文件哈希：\n" + hash;
         }
 
+        // 测试各种功能
+        public void test(object sender, RoutedEventArgs e)
+        {
+            //Pack pack = new Pack();
+            //pack.ExtractFile("file.zip");
+
+            Process.Start("UpdateAssistant", "file.zip");
+            foreach (var item in Process.GetProcesses())
+            {
+                if (item.ProcessName == "AUS")
+                    item.Kill();
+            }
+        }
     }
 }
