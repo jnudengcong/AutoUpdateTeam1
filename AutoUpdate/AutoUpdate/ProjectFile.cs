@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace AutoUpdate
 {
 
-    public class FileInfo
+    public class ProjectFile
     {
         public enum UpdateMethod { PARTIAL, WHOLE, REBOOT }
         private string name;
@@ -15,7 +15,7 @@ namespace AutoUpdate
         private string hash;
         private UpdateMethod update_method;
 
-        public FileInfo(string name, float version, string hash, UpdateMethod update_method)
+        public ProjectFile(string name, float version, string hash, UpdateMethod update_method)
         {
             this.name = name;
             this.version = version;

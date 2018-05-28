@@ -60,7 +60,7 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="ConFile.cs" />
-    <Compile Include="FileInfo.cs" />
+    <Compile Include="ProjectFile.cs" />
     <Compile Include="AppInfo.cs" />
     <Compile Include="Pack.cs" />
     <Compile Include="UpdateWindow.xaml.cs">

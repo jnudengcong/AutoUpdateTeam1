@@ -11,13 +11,13 @@ namespace AutoUpdate
         private float version;
         private string time;
         private string hash;
-        private List<FileInfo> file_list;
+        private List<ProjectFile> file_list;
         
 
         public ConFile(string name)
         {
             this.name = name;
-            file_list = new List<FileInfo>();
+            file_list = new List<ProjectFile>();
             if (System.IO.File.Exists(name))
             {
                 ReadConFile();
@@ -32,9 +32,9 @@ namespace AutoUpdate
         }
 
 
-        public void AddFile(FileInfo file_info)
+        public void AddFile(ProjectFile project_info)
         {
-            file_list.Add(file_info);
+            file_list.Add(project_info);
         }
 
         // 生成配置文件
@@ -83,8 +83,8 @@ namespace AutoUpdate
                 float version = float.Parse(m_streamReader.ReadLine());
                 string hash = m_streamReader.ReadLine();
                 // 先转为int，再强制转换为enum类型
-                FileInfo.UpdateMethod update_method = (FileInfo.UpdateMethod)Enum.Parse(typeof(FileInfo.UpdateMethod), m_streamReader.ReadLine());
-                file_list.Add(new FileInfo(name, version, hash, update_method));
+                ProjectFile.UpdateMethod update_method = (ProjectFile.UpdateMethod)Enum.Parse(typeof(ProjectFile.UpdateMethod), m_streamReader.ReadLine());
+                file_list.Add(new ProjectFile(name, version, hash, update_method));
             }
 
             //string strLine = m_streamReader.ReadLine();
@@ -136,7 +136,7 @@ namespace AutoUpdate
             return this.file_list.Count;
         }
 
-        public List<FileInfo> GetList()
+        public List<ProjectFile> GetList()
         {
             return file_list;
         }

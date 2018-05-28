@@ -268,8 +268,8 @@ namespace AutoUpdate
                         if (item.GetName() == tmp_name)
                         {
                             exist = true;
-                            update_type = item.GetUpdateMethod() == FileInfo.UpdateMethod.PARTIAL ? "部分更新"
-                                : item.GetUpdateMethod() == FileInfo.UpdateMethod.WHOLE ? "整体更新"
+                            update_type = item.GetUpdateMethod() == ProjectFile.UpdateMethod.PARTIAL ? "部分更新"
+                                : item.GetUpdateMethod() == ProjectFile.UpdateMethod.WHOLE ? "整体更新"
                                 : "更新后重启";
                         }
                     }
@@ -306,21 +306,21 @@ namespace AutoUpdate
                 float version = float.Parse(selected_item.Version);
                 string hash = selected_item.Hash;
 
-                FileInfo.UpdateMethod u_method;
+                ProjectFile.UpdateMethod u_method;
                 if (selected_item.UpdateType == null)
                 {
-                    u_method = FileInfo.UpdateMethod.PARTIAL;
+                    u_method = ProjectFile.UpdateMethod.PARTIAL;
                     selected_item.UpdateType = "部分更新";
                 }
                 else
                 {
-                    u_method = selected_item.UpdateType == "部分更新" ? FileInfo.UpdateMethod.PARTIAL
-                           : selected_item.UpdateType == "整体更新" ? FileInfo.UpdateMethod.WHOLE
-                           : FileInfo.UpdateMethod.REBOOT;
+                    u_method = selected_item.UpdateType == "部分更新" ? ProjectFile.UpdateMethod.PARTIAL
+                           : selected_item.UpdateType == "整体更新" ? ProjectFile.UpdateMethod.WHOLE
+                           : ProjectFile.UpdateMethod.REBOOT;
                 }
 
-                FileInfo file_info = new FileInfo(name, version, hash, u_method);
-                con_file.AddFile(file_info);
+                ProjectFile project_info = new ProjectFile(name, version, hash, u_method);
+                con_file.AddFile(project_info);
                 
             }
 
@@ -360,9 +360,9 @@ namespace AutoUpdate
                     // 比较相对路径名
                     string tmp_name = string.IsNullOrEmpty(relative_path) ? selected_item.File : relative_path + "\\" + selected_item.File;
                     if (item.GetName() == tmp_name)
-                        item.SetUpdateMethod(selected_item.UpdateType == "部分更新" ? FileInfo.UpdateMethod.PARTIAL
-                               : selected_item.UpdateType == "整体更新" ? FileInfo.UpdateMethod.WHOLE
-                               : FileInfo.UpdateMethod.REBOOT);
+                        item.SetUpdateMethod(selected_item.UpdateType == "部分更新" ? ProjectFile.UpdateMethod.PARTIAL
+                               : selected_item.UpdateType == "整体更新" ? ProjectFile.UpdateMethod.WHOLE
+                               : ProjectFile.UpdateMethod.REBOOT);
                 }
             }
             
@@ -396,15 +396,8 @@ namespace AutoUpdate
         // 测试各种功能
         public void test(object sender, RoutedEventArgs e)
         {
-            //Pack pack = new Pack();
-            //pack.ExtractFile("file.zip");
-
-            Process.Start("UpdateAssistant", "file.zip");
-            foreach (var item in Process.GetProcesses())
-            {
-                if (item.ProcessName == "AUS")
-                    item.Kill();
-            }
+            // 命令行参数要用空格隔开
+            Process.Start("UpdateAssistant", "Package.zip");
         }
     }
 }
