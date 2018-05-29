@@ -7,7 +7,7 @@
         mc:Ignorable="d"
         WindowStartupLocation="CenterScreen"
         Title="自动更新系统" Height="560" Width="800"
-        Loaded="WindowLoaded">
+        ContentRendered="WindowContentRendered">
 
     <Window.Resources>
         <ObjectDataProvider x:Key="comboBoxItems"></ObjectDataProvider>

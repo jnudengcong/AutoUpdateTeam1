@@ -39,7 +39,10 @@ namespace AutoUpdate
             
             set_version_box.Text = (app_info.GetVersion() + 0.01f).ToString();
             label_warnning.Visibility = Visibility.Hidden;
-            
+
+            // 启动时如果有install.ini文件，先删除
+            if (File.Exists(app_info.GetInstallName()))
+                File.Delete(app_info.GetInstallName());
         }
 
         // 主界面中的数据结构
@@ -62,9 +65,7 @@ namespace AutoUpdate
             public string UpdateType { get; set; }
     }
 
-        // 窗口加载完之后的函数，在xaml中进行了绑定，关键字async异步进行调用，否则无法得到想要的效果
-        // 窗口加载完后还未进行渲染，如果是渲染完之后，可以在xaml中使用ContentRendered进行绑定
-        private async void WindowLoaded(object sender, RoutedEventArgs e)
+        private async void WindowContentRendered(object sender, EventArgs e)
         {
             // 主窗口加载完后，延迟1秒打开更新提示框
             await Task.Delay(1000);
@@ -76,11 +77,6 @@ namespace AutoUpdate
                 UpdateWindow update_window = new UpdateWindow();
                 // 以对话框的形式打开
                 update_window.ShowDialog();
-            }
-            else
-            {
-                if (File.Exists(install_ini))
-                    File.Delete(install_ini);
             }
             
         }
@@ -403,5 +399,7 @@ namespace AutoUpdate
             
             
         }
+
+        
     }
 }

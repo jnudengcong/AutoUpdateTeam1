@@ -29,6 +29,7 @@ namespace AutoUpdate
             InitializeComponent();
             updating_page.Visibility = Visibility.Hidden;
             install_ini = app_info.GetInstallName();
+            label_info.Content = "名称：自动更新系统\n来源：" + app_info.GetUrl();
         }
 
         private void Update(object sender, RoutedEventArgs e)
@@ -51,11 +52,15 @@ namespace AutoUpdate
             
         }
 
+        
         private void CloseWindow(object sender, RoutedEventArgs e)
         {
-            if (File.Exists(install_ini))
-                File.Delete(install_ini);
             this.Close();
+        }
+
+        private void AppShutdown(object sender, RoutedEventArgs e)
+        {
+            Application.Current.Shutdown();
         }
     }
 }
