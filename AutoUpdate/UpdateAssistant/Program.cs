@@ -70,6 +70,8 @@ namespace UpdateAssistant
             FileInfo file = new FileInfo(install_ini);
             file.MoveTo("version.ini");
             
+            if (File.Exists("AutoUpdate.exe"))
+                Process.Start("AutoUpdate");
         }
     }
 }
