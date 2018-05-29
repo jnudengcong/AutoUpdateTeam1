@@ -13,8 +13,20 @@ namespace UpdateAssistant
     {
         static void Main(string[] args)
         {
-            string package_name = args[0];
-            string version_file = args[1];
+            if (args.Count() == 0)
+                return;
+            string install_ini = args[0];
+            string package_name = args[1];
+            if (!File.Exists(install_ini) || !File.Exists(package_name))
+            {
+                if (File.Exists(install_ini))
+                    File.Delete(install_ini);
+                if (File.Exists(package_name))
+                    File.Delete(package_name);
+                return;
+            }
+            if (package_name.IndexOf(".zip") == -1)
+                package_name = package_name + ".zip";
 
             // 主程序退出后进行替换
             bool flag = true;
@@ -36,34 +48,27 @@ namespace UpdateAssistant
             {
                 if (Path.GetExtension(item.Name) == ".ini" || item.Name == "UpdateAssistant.exe" || item.Name == package_name)
                     continue;
-                Console.WriteLine(item.Name);
                 // 删除旧的文件
                 File.Delete(item.Name);
             }
             DirectoryInfo[] dirs = dic.GetDirectories();
-            Console.WriteLine();
             foreach (var item in dirs)
             {
-                Console.WriteLine(item.Name);
-                // 删除旧的文件夹
                 Directory.Delete(item.Name, true);
             }
-
-            Console.Read();
+            
             if (File.Exists(package_name))
             {
                 // 解压程序包
                 ZipFile.ExtractToDirectory(package_name, AppDomain.CurrentDomain.BaseDirectory);
                 // 解压完成后删除程序包
-                // 暂时保留File.Delete(package_name);
+                File.Delete(package_name);
             }
 
             if (File.Exists("version.ini"))
                 File.Delete("version.ini");
-            FileInfo file = new FileInfo(version_file);
+            FileInfo file = new FileInfo(install_ini);
             file.MoveTo("version.ini");
-
-            Console.Read();
             
         }
     }

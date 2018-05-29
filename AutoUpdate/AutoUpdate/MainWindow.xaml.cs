@@ -7,6 +7,7 @@ using System.Windows.Controls;
 using System.Windows.Forms;
 using System.Collections.ObjectModel;
 using System.Diagnostics;  // 用于调试的类,使用Trace.Write(str)输出信息
+using System.Net;
 
 namespace AutoUpdate
 {
@@ -67,17 +68,19 @@ namespace AutoUpdate
         {
             // 主窗口加载完后，延迟1秒打开更新提示框
             await Task.Delay(1000);
-            FileStream fs_url = new FileStream(@"url.ini", FileMode.OpenOrCreate, FileAccess.Read);
-            StreamReader m_streamReader = new StreamReader(fs_url);
-            m_streamReader.BaseStream.Seek(0, SeekOrigin.Begin);
-            string url = m_streamReader.ReadLine();
-            ConFile con_install = new ConFile(url);
-            if (con_install.GetVersion() > 3.3)
+
+            string install_ini = app_info.GetInstallName();
+            FileDownload file_download = new FileDownload(app_info.GetUrl(), install_ini);
+            if (file_download.URLExists() && file_download.GetVersion() > app_info.GetVersion())
             {
                 UpdateWindow update_window = new UpdateWindow();
-               
                 // 以对话框的形式打开
                 update_window.ShowDialog();
+            }
+            else
+            {
+                if (File.Exists(install_ini))
+                    File.Delete(install_ini);
             }
             
         }
@@ -218,7 +221,7 @@ namespace AutoUpdate
                     {
                         pack.AddSourceFile(item.GetName());
                     }
-                    pack.PackFile(target_dir + "\\" + "Package");
+                    pack.PackFile(target_dir + "\\" + MainWindow.con_file.GetPackageName());
                 }
                 ShowMainPage();
             }
@@ -396,8 +399,9 @@ namespace AutoUpdate
         // 测试各种功能
         public void test(object sender, RoutedEventArgs e)
         {
-            // 命令行参数要用空格隔开
-            Process.Start("UpdateAssistant", "Package.zip");
+            // 159.65.106.169
+            
+            
         }
     }
 }

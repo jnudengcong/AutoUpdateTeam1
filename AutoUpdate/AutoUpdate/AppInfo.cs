@@ -27,6 +27,9 @@ namespace AutoUpdate
         // url
         private string url;
 
+        // install.ini
+        private string install_ini;
+
         private static readonly object locker = new object();
 
         private AppInfo()
@@ -80,6 +83,9 @@ namespace AutoUpdate
             m_streamReader.BaseStream.Seek(0, SeekOrigin.Begin);
             url = m_streamReader.ReadLine();
             m_streamReader.Close();
+
+            // install.ini
+            install_ini = "install.ini";
         }
 
         public static AppInfo GetInstance()
@@ -139,6 +145,11 @@ namespace AutoUpdate
         public string GetUrl()
         {
             return url;
+        }
+
+        public string GetInstallName()
+        {
+            return install_ini;
         }
 
         public void SaveUrl(string url)

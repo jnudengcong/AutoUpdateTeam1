@@ -12,7 +12,6 @@ namespace AutoUpdate
         private string time;
         private string hash;
         private List<ProjectFile> file_list;
-        
 
         public ConFile(string name)
         {
@@ -28,7 +27,7 @@ namespace AutoUpdate
                 version = app_info.GetVersion() + 0.01f;
                 time = DateTime.Now.ToString("yyyy/MM/dd");
             }
-            
+      
         }
 
 
@@ -62,6 +61,7 @@ namespace AutoUpdate
             //关闭此文件
             m_streamWriter.Flush();
             m_streamWriter.Close();
+            
         }
 
         // 读取配置文件
@@ -99,6 +99,11 @@ namespace AutoUpdate
         public string GetName()
         {
             return this.name;
+        }
+
+        public string GetPackageName()
+        {
+            return "aus_v" + version.ToString();
         }
 
         public void SetVersion(float version)
