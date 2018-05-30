@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.IO.Compression;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -28,14 +29,14 @@ namespace AutoUpdate
         {
             InitializeComponent();
             updating_page.Visibility = Visibility.Hidden;
+            running_update_page.Visibility = Visibility.Hidden;
             install_ini = app_info.GetInstallName();
             label_info.Content = "名称：自动更新系统\n来源：" + app_info.GetUrl();
         }
 
         private void Update(object sender, RoutedEventArgs e)
         {
-            prompt_page.Visibility = Visibility.Hidden;
-            updating_page.Visibility = Visibility.Visible;
+            
 
             
             if (File.Exists(install_ini))
@@ -64,15 +65,8 @@ namespace AutoUpdate
                                     {
                                         if (item_install.GetHash() != item_version.GetHash())
                                             reboot = true;
-                                        if (reboot)
-                                        {
-                                            Trace.WriteLine(item_install.GetHash());
-                                            Trace.WriteLine(item_version.GetHash());
-                                        }
                                     }
                                 }
-                                    
-                                
                             }
                             if (!existed)
                             {
@@ -80,15 +74,51 @@ namespace AutoUpdate
                             }
                         }
                     }
-
+                    
                     string package_name = install_confile.GetPackageName();
+                    string package_zip_name = package_name + ".zip";
+
+                    if (File.Exists(package_zip_name))
+                    {
+                        // 解压程序包
+                        ZipFile.ExtractToDirectory(package_zip_name, AppDomain.CurrentDomain.BaseDirectory + "\\" + package_name);
+                        // 删除程序包
+                        File.Delete(package_zip_name);
+
+                        if (File.Exists(package_name + "\\UpdateAssistant.exe"))
+                        {
+                            if (File.Exists("UpdateAssistant.exe"))
+                                File.Delete("UpdateAssistant.exe");
+                            FileInfo file = new FileInfo(package_name + "\\UpdateAssistant.exe");
+                            file.MoveTo("UpdateAssistant.exe");
+                        }
+                    }
+
                     if (reboot)
                     {
-                        Process.Start("UpdateAssistant", install_ini + " " + package_name + " " + ProjectFile.UpdateMethod.REBOOT);
+                        prompt_page.Visibility = Visibility.Hidden;
+                        running_update_page.Visibility = Visibility.Hidden;
+                        updating_page.Visibility = Visibility.Visible;
+                        Process.Start("UpdateAssistant", install_ini + " " + package_name + " " + "REBOOT");
                     }
                     else
                     {
-                        Process.Start("UpdateAssistant", install_ini + " " + package_name + " " + ProjectFile.UpdateMethod.RUNNING);
+                        Process.Start("UpdateAssistant", install_ini + " " + package_name + " " + "RUNNING");
+                        bool flag = true;
+                        while (flag)
+                        {
+                            flag = false;
+                            foreach (var item in Process.GetProcesses())
+                            {
+                                if (item.ProcessName == "UpdateAssistant")
+                                {
+                                    flag = true;
+                                }
+                            }
+                        }
+                        prompt_page.Visibility = Visibility.Hidden;
+                        updating_page.Visibility = Visibility.Hidden;
+                        running_update_page.Visibility = Visibility.Visible;
                     }
                     
                 }

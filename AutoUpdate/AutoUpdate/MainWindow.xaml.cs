@@ -29,7 +29,6 @@ namespace AutoUpdate
             config_page.Visibility = Visibility.Hidden;
 
             ShowMainPage();
-            info_display(app_info.GetVersion().ToString(), app_info.GetFileCount().ToString(), app_info.GetTime(), app_info.GetHash());
 
             List<string> comboBoxItems = new List<string>();
             comboBoxItems.Add("重启后覆盖");
@@ -73,8 +72,13 @@ namespace AutoUpdate
                 UpdateWindow update_window = new UpdateWindow();
                 // 以对话框的形式打开
                 update_window.ShowDialog();
+                ShowMainPage();
             }
-            
+            else
+            {
+                if (File.Exists(app_info.GetInstallName()))
+                    File.Delete(app_info.GetInstallName());
+            }
         }
 
         private void ShowMainPage(object sender, RoutedEventArgs e)
@@ -84,7 +88,8 @@ namespace AutoUpdate
 
         private void ShowMainPage()
         {
-            
+            app_info.RefreshVersion();
+            info_display(app_info.GetVersion().ToString(), app_info.GetFileCount().ToString(), app_info.GetTime(), app_info.GetHash());
             var main_grid_list = new List<MainGridData>();
 
             // 遍历文件列表
@@ -215,6 +220,7 @@ namespace AutoUpdate
                     }
                     pack.PackFile(target_dir + "\\" + MainWindow.con_file.GetPackageName());
                 }
+                
                 ShowMainPage();
             }
         }
@@ -386,8 +392,7 @@ namespace AutoUpdate
         // 测试各种功能
         public void test(object sender, RoutedEventArgs e)
         {
-
-            Trace.WriteLine("something");
+            
         }
 
         

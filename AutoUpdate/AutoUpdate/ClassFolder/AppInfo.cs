@@ -103,6 +103,30 @@ namespace AutoUpdate
             return instance;
         }
 
+        public void RefreshVersion()
+        {
+            file_list = new List<ProjectFile>();
+            FileStream fs = new FileStream(this.name, FileMode.OpenOrCreate, FileAccess.Read);
+            StreamReader m_streamReader = new StreamReader(fs);
+            m_streamReader.BaseStream.Seek(0, SeekOrigin.Begin);
+            // 读取配置文件自身的信息
+            this.current_version = float.Parse(m_streamReader.ReadLine());
+            this.time = m_streamReader.ReadLine();
+            this.hash = m_streamReader.ReadLine();
+            int file_count = int.Parse(m_streamReader.ReadLine());
+
+            for (int i = 0; i < file_count; i++)
+            {
+                // 读取配置文件列表中的文件信息
+                string name = m_streamReader.ReadLine();
+                float version = float.Parse(m_streamReader.ReadLine());
+                string hash = m_streamReader.ReadLine();
+                ProjectFile.UpdateMethod update_method = (ProjectFile.UpdateMethod)Enum.Parse(typeof(ProjectFile.UpdateMethod), m_streamReader.ReadLine());
+                file_list.Add(new ProjectFile(name, version, hash, update_method));
+            }
+            m_streamReader.Close();
+        }
+
         public void AddHistory(string file_path)
         {
             history_file_list.Add(file_path);
