@@ -18,37 +18,42 @@ namespace AutoUpdate
 
         public FileDownload(string url, string install_ini)
         {
-            if (url.IndexOf("http://") != 0)
-                this.url = "http://" + url;
-            else
-                this.url = url;
+            this.url = url;
             this.install_ini = install_ini;
             this.existed = false;
         }
 
         public bool URLExists()
         {
-            // 判断install.ini是否存在
-            WebRequest webRequest = WebRequest.Create(url + "/" + install_ini);
-            webRequest.Timeout = 1200; // miliseconds
-            webRequest.Method = "HEAD";
+            if (url.IndexOf("http://") == 0)
+            {
+                // 判断install.ini是否存在
+                WebRequest webRequest = WebRequest.Create(url + "/" + install_ini);
+                webRequest.Timeout = 1200; // miliseconds
+                webRequest.Method = "HEAD";
 
-            HttpWebResponse response = null;
-            try
-            {
-                response = (HttpWebResponse)webRequest.GetResponse();
-                existed = true;
-            }
-            catch (WebException webException)
-            {
-
-            }
-            finally
-            {
-                if (response != null)
+                HttpWebResponse response = null;
+                try
                 {
-                    response.Close();
+                    response = (HttpWebResponse)webRequest.GetResponse();
+                    existed = true;
                 }
+                catch (WebException webException)
+                {
+
+                }
+                finally
+                {
+                    if (response != null)
+                    {
+                        response.Close();
+                    }
+                }
+            }
+            else
+            {
+                if (File.Exists(url.Substring(7) + "/" + install_ini))
+                    existed = true;
             }
             return existed;
         }

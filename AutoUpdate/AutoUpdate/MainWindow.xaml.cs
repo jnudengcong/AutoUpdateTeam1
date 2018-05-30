@@ -32,17 +32,13 @@ namespace AutoUpdate
             info_display(app_info.GetVersion().ToString(), app_info.GetFileCount().ToString(), app_info.GetTime(), app_info.GetHash());
 
             List<string> comboBoxItems = new List<string>();
-            comboBoxItems.Add("部分更新");
-            comboBoxItems.Add("整体更新");
-            comboBoxItems.Add("更新后重启");
+            comboBoxItems.Add("重启后覆盖");
+            comboBoxItems.Add("运行时覆盖");
             dataGridComboBoxColumn.ItemsSource = comboBoxItems;
             
             set_version_box.Text = (app_info.GetVersion() + 0.01f).ToString();
             label_warnning.Visibility = Visibility.Hidden;
-
-            // 启动时如果有install.ini文件，先删除
-            if (File.Exists(app_info.GetInstallName()))
-                File.Delete(app_info.GetInstallName());
+            
         }
 
         // 主界面中的数据结构
@@ -206,7 +202,7 @@ namespace AutoUpdate
                     MainWindow.con_file.SetName(sfd.FileName);
                     MainWindow.con_file.SetVersion(float.Parse(set_version_box.Text));
                     MainWindow.con_file.SetTime(DateTime.Now.ToString("yyyy/MM/dd"));
-                    MainWindow.con_file.SetHash(app_info.CreateMD5(sfd.FileName));  // TODO: 这里需要相对路径，暂时没有改
+                    //MainWindow.con_file.SetHash(app_info.CreateMD5(sfd.FileName));  // TODO: 这里需要相对路径，暂时没有改
                     MainWindow.con_file.SaveConFile();
                     app_info.AddHistory(sfd.FileName);
 
@@ -259,7 +255,7 @@ namespace AutoUpdate
                 foreach (System.IO.FileInfo it in fileinfo)
                 {
                     bool exist = false;
-                    string update_type = "部分更新";
+                    string update_type = "重启后覆盖";
                     foreach (var item in con_file.GetList())
                     {
                         // 文件名是以相对路径的形式保存的，这里对相对路径名进行比较
@@ -267,9 +263,8 @@ namespace AutoUpdate
                         if (item.GetName() == tmp_name)
                         {
                             exist = true;
-                            update_type = item.GetUpdateMethod() == ProjectFile.UpdateMethod.PARTIAL ? "部分更新"
-                                : item.GetUpdateMethod() == ProjectFile.UpdateMethod.WHOLE ? "整体更新"
-                                : "更新后重启";
+                            item.SetHash(app_info.CreateMD5(string.IsNullOrEmpty(relative_path) ? it.Name : relative_path + "\\" + it.Name));
+                            update_type = item.GetUpdateMethod() == ProjectFile.UpdateMethod.RUNNING ? "运行时覆盖" : "重启后覆盖";
                         }
                     }
                     config_grid_list.Add(new ConfigureGridData {
@@ -277,7 +272,7 @@ namespace AutoUpdate
                         File = it.Name,
                         Version = "1.0",
                         Time = it.LastWriteTime.ToString(),
-                        Hash = app_info.CreateMD5(it.Name),
+                        Hash = app_info.CreateMD5(string.IsNullOrEmpty(relative_path) ? it.Name : relative_path + "\\" + it.Name),
                         UpdateType = update_type});
                 }
                 config_data_grid.ItemsSource = config_grid_list;
@@ -308,14 +303,12 @@ namespace AutoUpdate
                 ProjectFile.UpdateMethod u_method;
                 if (selected_item.UpdateType == null)
                 {
-                    u_method = ProjectFile.UpdateMethod.PARTIAL;
-                    selected_item.UpdateType = "部分更新";
+                    u_method = ProjectFile.UpdateMethod.REBOOT;
+                    selected_item.UpdateType = "重启后覆盖";
                 }
                 else
                 {
-                    u_method = selected_item.UpdateType == "部分更新" ? ProjectFile.UpdateMethod.PARTIAL
-                           : selected_item.UpdateType == "整体更新" ? ProjectFile.UpdateMethod.WHOLE
-                           : ProjectFile.UpdateMethod.REBOOT;
+                    u_method = selected_item.UpdateType == "重启后覆盖" ? ProjectFile.UpdateMethod.REBOOT : ProjectFile.UpdateMethod.RUNNING;
                 }
 
                 ProjectFile project_info = new ProjectFile(name, version, hash, u_method);
@@ -359,9 +352,7 @@ namespace AutoUpdate
                     // 比较相对路径名
                     string tmp_name = string.IsNullOrEmpty(relative_path) ? selected_item.File : relative_path + "\\" + selected_item.File;
                     if (item.GetName() == tmp_name)
-                        item.SetUpdateMethod(selected_item.UpdateType == "部分更新" ? ProjectFile.UpdateMethod.PARTIAL
-                               : selected_item.UpdateType == "整体更新" ? ProjectFile.UpdateMethod.WHOLE
-                               : ProjectFile.UpdateMethod.REBOOT);
+                        item.SetUpdateMethod(selected_item.UpdateType == "重启后覆盖" ? ProjectFile.UpdateMethod.REBOOT : ProjectFile.UpdateMethod.RUNNING);
                 }
             }
             
@@ -395,9 +386,8 @@ namespace AutoUpdate
         // 测试各种功能
         public void test(object sender, RoutedEventArgs e)
         {
-            // 159.65.106.169
-            
-            
+
+            Trace.WriteLine("something");
         }
 
         

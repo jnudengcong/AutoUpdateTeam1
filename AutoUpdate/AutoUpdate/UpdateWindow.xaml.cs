@@ -36,16 +36,61 @@ namespace AutoUpdate
         {
             prompt_page.Visibility = Visibility.Hidden;
             updating_page.Visibility = Visibility.Visible;
+
             
             if (File.Exists(install_ini))
             {
                 FileDownload file_download = new FileDownload(app_info.GetUrl(), app_info.GetInstallName());
                 if (file_download.URLExists())
                 {
+                    bool reboot = false;
+
                     file_download.DownloadPackage();
                     ConFile install_confile = new ConFile(install_ini);
-                    string package_name = install_confile.GetPackageName() + ".zip";
-                    Process.Start("UpdateAssistant", install_ini + " " + package_name);
+                    ConFile version_confile = new ConFile("version.ini");
+                    foreach (var item_install in install_confile.GetList())
+                    {
+                        if (reboot)
+                            break;
+                        if (item_install.GetUpdateMethod() == ProjectFile.UpdateMethod.REBOOT)
+                        {
+                            bool existed = false;
+                            foreach (var item_version in version_confile.GetList())
+                            {
+                                if (item_install.GetName() == item_version.GetName())
+                                {
+                                    existed = true;
+                                    if (existed)
+                                    {
+                                        if (item_install.GetHash() != item_version.GetHash())
+                                            reboot = true;
+                                        if (reboot)
+                                        {
+                                            Trace.WriteLine(item_install.GetHash());
+                                            Trace.WriteLine(item_version.GetHash());
+                                        }
+                                    }
+                                }
+                                    
+                                
+                            }
+                            if (!existed)
+                            {
+                                reboot = true;
+                            }
+                        }
+                    }
+
+                    string package_name = install_confile.GetPackageName();
+                    if (reboot)
+                    {
+                        Process.Start("UpdateAssistant", install_ini + " " + package_name + " " + ProjectFile.UpdateMethod.REBOOT);
+                    }
+                    else
+                    {
+                        Process.Start("UpdateAssistant", install_ini + " " + package_name + " " + ProjectFile.UpdateMethod.RUNNING);
+                    }
+                    
                 }
                 
             }

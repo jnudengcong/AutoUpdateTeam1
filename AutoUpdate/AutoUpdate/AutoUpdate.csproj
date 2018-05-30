@@ -59,11 +59,11 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="ConFile.cs" />
-    <Compile Include="FileDownload.cs" />
-    <Compile Include="ProjectFile.cs" />
-    <Compile Include="AppInfo.cs" />
-    <Compile Include="Pack.cs" />
+    <Compile Include="ClassFolder\ConFile.cs" />
+    <Compile Include="ClassFolder\FileDownload.cs" />
+    <Compile Include="ClassFolder\ProjectFile.cs" />
+    <Compile Include="ClassFolder\AppInfo.cs" />
+    <Compile Include="ClassFolder\Pack.cs" />
     <Compile Include="UpdateWindow.xaml.cs">
       <DependentUpon>UpdateWindow.xaml</DependentUpon>
     </Compile>
@@ -124,5 +124,6 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -35,7 +35,7 @@
                 <MenuItem Header="关于自动更新系统" />
             </MenuItem>
         </Menu>
-        <Grid x:Name="main_page" Background="#F0F0F0"  HorizontalAlignment="Left" Height="508" Margin="0,27,0,-6" VerticalAlignment="Top" Width="792" Grid.ColumnSpan="3">
+        <Grid x:Name="main_page" Background="#F0F0F0"  HorizontalAlignment="Left" Height="508" Margin="0,27,0,-6" VerticalAlignment="Top" Width="792" Grid.ColumnSpan="3" d:IsHidden="True">
             <Border Background="#E6EBF0" BorderBrush="Gray" BorderThickness="0, 1, 1, 1" HorizontalAlignment="Left" Height="460" VerticalAlignment="Top" Width="270">
                 <TextBlock x:Name="info_display_text" TextWrapping="Wrap" FontSize="16" Margin="15,10,15,10" />
             </Border>
@@ -58,7 +58,7 @@
             </Border>
             <Label x:Name="label" FontSize="20" Content="配置文件历史" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="280,0,0,0" Height="36" Width="169"/>
         </Grid>
-        <Grid x:Name="config_page" Background="#F0F0F0" Height="502" VerticalAlignment="Top" Margin="0,27,0,0" Grid.ColumnSpan="3" d:IsHidden="True">
+        <Grid x:Name="config_page" Background="#F0F0F0" Height="502" VerticalAlignment="Top" Margin="0,27,0,0" Grid.ColumnSpan="3">
             <TreeView x:Name="treeView" BorderBrush="Gray" HorizontalAlignment="Left" Height="440" VerticalAlignment="Top" Width="183" TreeViewItem.Selected ="treeView_Selected"/>
             <DataGrid x:Name="config_data_grid" AutoGenerateColumns="False" BorderBrush="Gray" ItemsSource="{Binding ConfigureGridData}" 
                       HorizontalAlignment="Left" Height="440" Margin="183,0,0,0" VerticalAlignment="Top" Width="605" CanUserAddRows="False">
@@ -71,11 +71,10 @@
                             </Style>
                         </DataGridCheckBoxColumn.CellStyle>
                     </DataGridCheckBoxColumn>
-                    <DataGridTextColumn Header="文件" Width="1.2*" Binding="{Binding File}"/>
-                    <DataGridTextColumn Header="版本" Width="0.8*" Binding="{Binding Version}"/>
+                    <DataGridTextColumn Header="文件" Width="2*" Binding="{Binding File}"/>
                     <DataGridTextColumn Header="最近更新" Width="1.3*" Binding="{Binding Time}"/>
                     <DataGridTextColumn Header="哈希值" Width="5*" Binding="{Binding Hash}"/>
-                    <DataGridComboBoxColumn Header="更新方式" Width="5*" x:Name="dataGridComboBoxColumn" SelectedItemBinding="{Binding UpdateType}" ItemsSource="{Binding Source={StaticResource comboBoxItems}}">
+                    <DataGridComboBoxColumn Header="更新方式" Width="2*" x:Name="dataGridComboBoxColumn" SelectedItemBinding="{Binding UpdateType}" ItemsSource="{Binding Source={StaticResource comboBoxItems}}">
                         <DataGridComboBoxColumn.EditingElementStyle>
                             <Style TargetType="{x:Type ComboBox}">
                                 <EventSetter Event="SelectionChanged" Handler="combobox_changed"></EventSetter>

@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Security.Cryptography;
 
 namespace AutoUpdate
 {
@@ -52,7 +53,6 @@ namespace AutoUpdate
                 string name = m_streamReader.ReadLine();
                 float version = float.Parse(m_streamReader.ReadLine());
                 string hash = m_streamReader.ReadLine();
-                // 先转为int，再强制转换为enum类型
                 ProjectFile.UpdateMethod update_method = (ProjectFile.UpdateMethod)Enum.Parse(typeof(ProjectFile.UpdateMethod), m_streamReader.ReadLine());
                 file_list.Add(new ProjectFile(name, version, hash, update_method));
             }
@@ -167,20 +167,15 @@ namespace AutoUpdate
             m_streamWriter.Close();
         }
 
-        public string CreateMD5(string input)
+        public string CreateMD5(string filename)
         {
-            // Use input string to calculate MD5 hash
-            using (System.Security.Cryptography.MD5 md5 = System.Security.Cryptography.MD5.Create())
+            using (var md5 = MD5.Create())
             {
-                byte[] inputBytes = System.Text.Encoding.ASCII.GetBytes(input);
-                byte[] hashBytes = md5.ComputeHash(inputBytes);
-                // Convert the byte array to hexadecimal string
-                StringBuilder sb = new StringBuilder();
-                for (int i = 0; i < hashBytes.Length; i++)
+                using (var stream = File.OpenRead(filename))
                 {
-                    sb.Append(hashBytes[i].ToString("X2"));
+                    var hash = md5.ComputeHash(stream);
+                    return BitConverter.ToString(hash).Replace("-", "").ToLowerInvariant();
                 }
-                return sb.ToString();
             }
         }
 

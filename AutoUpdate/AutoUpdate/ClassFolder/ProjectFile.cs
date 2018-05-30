@@ -9,7 +9,7 @@ namespace AutoUpdate
 
     public class ProjectFile
     {
-        public enum UpdateMethod { PARTIAL, WHOLE, REBOOT }
+        public enum UpdateMethod { RUNNING, REBOOT }
         private string name;
         private float version;
         private string hash;
@@ -31,6 +31,11 @@ namespace AutoUpdate
         public float GetVersion()
         {
             return this.version;
+        }
+
+        public void SetHash(string hash)
+        {
+            this.hash = hash;
         }
 
         public string GetHash()
