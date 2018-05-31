@@ -36,7 +36,8 @@ namespace AutoUpdate
                 try
                 {
                     response = (HttpWebResponse)webRequest.GetResponse();
-                    existed = true;
+                    if (response.StatusCode == HttpStatusCode.OK)
+                        existed = true;
                 }
                 catch (WebException webException)
                 {
@@ -50,7 +51,7 @@ namespace AutoUpdate
                     }
                 }
             }
-            else
+            else if (url.IndexOf("file://") == 0)
             {
                 if (File.Exists(url.Substring(7) + "/" + install_ini))
                     existed = true;

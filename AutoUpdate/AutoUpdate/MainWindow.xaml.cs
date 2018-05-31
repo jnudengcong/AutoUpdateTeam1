@@ -29,6 +29,7 @@ namespace AutoUpdate
             config_page.Visibility = Visibility.Hidden;
 
             ShowMainPage();
+            
 
             List<string> comboBoxItems = new List<string>();
             comboBoxItems.Add("重启后覆盖");
