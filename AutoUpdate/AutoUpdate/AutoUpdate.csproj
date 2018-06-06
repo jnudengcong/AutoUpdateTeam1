@@ -34,6 +34,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="log4net, Version=2.0.8.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
+      <HintPath>..\packages\log4net.2.0.8\lib\net45-full\log4net.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
@@ -59,11 +62,11 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="ClassFolder\ConFile.cs" />
-    <Compile Include="ClassFolder\FileDownload.cs" />
-    <Compile Include="ClassFolder\ProjectFile.cs" />
-    <Compile Include="ClassFolder\AppInfo.cs" />
-    <Compile Include="ClassFolder\Pack.cs" />
+    <Compile Include="Class\ConFile.cs" />
+    <Compile Include="Class\FileDownload.cs" />
+    <Compile Include="Class\ProjectFile.cs" />
+    <Compile Include="Class\AppInfo.cs" />
+    <Compile Include="Class\Pack.cs" />
     <Compile Include="UpdateWindow.xaml.cs">
       <DependentUpon>UpdateWindow.xaml</DependentUpon>
     </Compile>
@@ -116,6 +119,7 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>

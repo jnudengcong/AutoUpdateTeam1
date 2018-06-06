@@ -23,6 +23,9 @@ namespace AutoUpdate
     {
         AppInfo info = AppInfo.GetInstance();
 
+        private static readonly log4net.ILog log =
+            log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
         public UrlWindow()
         {
             InitializeComponent();
@@ -33,6 +36,7 @@ namespace AutoUpdate
         private void SaveUrl(object sender, RoutedEventArgs e)
         {
             info.SaveUrl(url_text.Text);
+            log.Info("New Url: " + url_text);
             this.Close();
         }
 

@@ -14,12 +14,15 @@ namespace AutoUpdate
     /// <summary>
     /// MainWindow.xaml 的交互逻辑
     /// </summary>
-    
+
     public partial class MainWindow : Window
     {
         AppInfo app_info = AppInfo.GetInstance();
         public static ConFile con_file;
         string relative_path;   // 配置界面显示的文件所在的相对路径
+
+        private static readonly log4net.ILog log =
+            log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
         public MainWindow()
         {
@@ -29,23 +32,23 @@ namespace AutoUpdate
             config_page.Visibility = Visibility.Hidden;
 
             ShowMainPage();
-            
 
             List<string> comboBoxItems = new List<string>();
             comboBoxItems.Add("重启后覆盖");
             comboBoxItems.Add("运行时覆盖");
             dataGridComboBoxColumn.ItemsSource = comboBoxItems;
-            
+
             set_version_box.Text = (app_info.GetVersion() + 0.01f).ToString();
             label_warnning.Visibility = Visibility.Hidden;
-            
+
+            log.Info("Initialization");
         }
 
         // 主界面中的数据结构
         public class MainGridData
         {
             public string ConFile { get; set; } // 配置文件名
-            public string Version { get; set; } 
+            public string Version { get; set; }
             public string Time { get; set; }
             public string Hash { get; set; }
         }
@@ -59,7 +62,7 @@ namespace AutoUpdate
             public string Time { get; set; }
             public string Hash { get; set; }
             public string UpdateType { get; set; }
-    }
+        }
 
         private async void WindowContentRendered(object sender, EventArgs e)
         {
@@ -70,10 +73,12 @@ namespace AutoUpdate
             FileDownload file_download = new FileDownload(app_info.GetUrl(), install_ini);
             if (file_download.URLExists() && file_download.GetVersion() > app_info.GetVersion())
             {
+                log.Debug("Update Version Exists: v" + file_download.GetVersion());
                 UpdateWindow update_window = new UpdateWindow();
                 // 以对话框的形式打开
                 update_window.ShowDialog();
                 ShowMainPage();
+
             }
             else
             {
@@ -120,6 +125,7 @@ namespace AutoUpdate
         private void CreateConFile(object sender, RoutedEventArgs e)
         {
             con_file = new ConFile("version.ini");
+            log.Info("Create Config File");
             ShowConfigurePage();
         }
 
@@ -135,6 +141,7 @@ namespace AutoUpdate
             if (sfd.ShowDialog() == System.Windows.Forms.DialogResult.OK)
             {
                 con_file = new ConFile(sfd.FileName);
+                log.Info("Open Config File: " + sfd.FileName);
             }
             ShowConfigurePage();
         }
@@ -147,6 +154,7 @@ namespace AutoUpdate
             {
                 string file_path = app_info.GetHistoryList()[index];
                 con_file = new ConFile(file_path);
+                log.Info("Open Config File: " + file_path);
             }
             ShowConfigurePage();
         }
@@ -158,6 +166,7 @@ namespace AutoUpdate
             {
                 string file_path = app_info.GetHistoryList()[index];
                 app_info.RemoveHistory(file_path);
+                log.Info("Remove Config File: " + file_path);
             }
             ShowMainPage();
         }
@@ -192,8 +201,8 @@ namespace AutoUpdate
         // 生成版本
         private void ShowVersionWindow(object sender, RoutedEventArgs e)
         {
-            
-            if (float.TryParse(set_version_box.Text, out float result) && result > app_info.GetVersion())
+            float result = 0;
+            if (float.TryParse(set_version_box.Text, out result) && result > app_info.GetVersion())
             {
                 SaveFileDialog sfd = new SaveFileDialog();
                 // 设置这个对话框的起始保存路径  
@@ -220,8 +229,10 @@ namespace AutoUpdate
                         pack.AddSourceFile(item.GetName());
                     }
                     pack.PackFile(target_dir + "\\" + MainWindow.con_file.GetPackageName());
+                    log.Info("Save Config File: " + sfd.FileName);
+                    log.Info("Generate Version: v" + set_version_box.Text);
                 }
-                
+
                 ShowMainPage();
             }
         }
@@ -250,7 +261,7 @@ namespace AutoUpdate
                     tvi.Tag = item.FullName;
                     treeViewItem.Items.Add(tvi);
                 }
-                
+
                 var config_list = new List<ConfigureGridData>();
                 config_list.Clear();
 
@@ -280,7 +291,7 @@ namespace AutoUpdate
                         Version = "1.0",
                         Time = it.LastWriteTime.ToString(),
                         Hash = app_info.CreateMD5(string.IsNullOrEmpty(relative_path) ? it.Name : relative_path + "\\" + it.Name),
-                        UpdateType = update_type});
+                        UpdateType = update_type });
                 }
                 config_data_grid.ItemsSource = config_grid_list;
             }
@@ -320,7 +331,7 @@ namespace AutoUpdate
 
                 ProjectFile project_info = new ProjectFile(name, version, hash, u_method);
                 con_file.AddFile(project_info);
-                
+
             }
 
         }
@@ -342,7 +353,7 @@ namespace AutoUpdate
                     }
                 }
             }
-            
+
         }
 
         // combobox内容改变事件
@@ -362,7 +373,7 @@ namespace AutoUpdate
                         item.SetUpdateMethod(selected_item.UpdateType == "重启后覆盖" ? ProjectFile.UpdateMethod.REBOOT : ProjectFile.UpdateMethod.RUNNING);
                 }
             }
-            
+
         }
 
         // 输入的版本不合法或不高于当前版本时，会进行提示
@@ -393,7 +404,7 @@ namespace AutoUpdate
         // 测试各种功能
         public void test(object sender, RoutedEventArgs e)
         {
-            
+            log.Info("hello log");
         }
 
         

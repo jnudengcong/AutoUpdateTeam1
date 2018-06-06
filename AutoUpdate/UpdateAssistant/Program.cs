@@ -11,6 +11,9 @@ namespace UpdateAssistant
 {
     class Program
     {
+        private static readonly log4net.ILog log =
+            log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
         static void Main(string[] args)
         {
             
@@ -39,7 +42,7 @@ namespace UpdateAssistant
                 FileInfo[] files = dic.GetFiles();
                 foreach (var item in files)
                 {
-                    if (Path.GetExtension(item.Name) == ".ini" || item.Name == "UpdateAssistant.exe")
+                    if (Path.GetExtension(item.Name) == ".ini" || Path.GetExtension(item.Name) == ".log" || item.Name == "UpdateAssistant.exe")
                         continue;
                     // 删除旧的文件
                     File.Delete(item.Name);
@@ -78,6 +81,8 @@ namespace UpdateAssistant
 
                 if (File.Exists("AutoUpdate.exe"))
                     Process.Start("AutoUpdate");
+
+                
             }
             else
             {
@@ -120,7 +125,8 @@ namespace UpdateAssistant
                 FileInfo f = new FileInfo(install_ini);
                 f.MoveTo("version.ini");
             }
-            
+
+            log.Info("Update Success");
         }
     }
 }
