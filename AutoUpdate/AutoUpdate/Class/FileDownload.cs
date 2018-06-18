@@ -25,6 +25,8 @@ namespace AutoUpdate
 
         public bool URLExists()
         {
+            if (string.IsNullOrEmpty(url))
+                return existed;
             if (url.IndexOf("http://") == 0)
             {
                 // 判断install.ini是否存在
