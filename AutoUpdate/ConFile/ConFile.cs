@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 
 
-namespace UpdateAssistant
+namespace AutoUpdate
 {
     public class ConFile
     {
@@ -51,7 +51,7 @@ namespace UpdateAssistant
             //关闭此文件
             stream_writer.Flush();
             stream_writer.Close();
-
+            
         }
 
         // 读取配置文件

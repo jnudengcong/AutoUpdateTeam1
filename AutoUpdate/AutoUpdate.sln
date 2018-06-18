@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AutoUpdate", "AutoUpdate\Au
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UpdateAssistant", "UpdateAssistant\UpdateAssistant.csproj", "{7A04A882-7D15-4854-BF47-9F52AD9F3D43}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConFile", "ConFile\ConFile.csproj", "{D0290C3A-F3F8-4564-94A5-FB0E33F4A92C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{7A04A882-7D15-4854-BF47-9F52AD9F3D43}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7A04A882-7D15-4854-BF47-9F52AD9F3D43}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7A04A882-7D15-4854-BF47-9F52AD9F3D43}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D0290C3A-F3F8-4564-94A5-FB0E33F4A92C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D0290C3A-F3F8-4564-94A5-FB0E33F4A92C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D0290C3A-F3F8-4564-94A5-FB0E33F4A92C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D0290C3A-F3F8-4564-94A5-FB0E33F4A92C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
