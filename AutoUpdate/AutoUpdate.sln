@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UpdateAssistant", "UpdateAs
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConFile", "ConFile\ConFile.csproj", "{D0290C3A-F3F8-4564-94A5-FB0E33F4A92C}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UpdateLib", "UpdateLib\UpdateLib.csproj", "{33412726-AFCF-48B1-B950-FEB8BCFF9130}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{D0290C3A-F3F8-4564-94A5-FB0E33F4A92C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D0290C3A-F3F8-4564-94A5-FB0E33F4A92C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D0290C3A-F3F8-4564-94A5-FB0E33F4A92C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{33412726-AFCF-48B1-B950-FEB8BCFF9130}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{33412726-AFCF-48B1-B950-FEB8BCFF9130}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{33412726-AFCF-48B1-B950-FEB8BCFF9130}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{33412726-AFCF-48B1-B950-FEB8BCFF9130}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

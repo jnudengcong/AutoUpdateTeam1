@@ -5,34 +5,26 @@ using System.IO;
 using System.IO.Compression;
 using System.Windows;
 
-namespace AutoUpdate
+namespace UpdateLib
 {
-    /// <summary>
-    /// UpdateWindow.xaml 的交互逻辑
-    /// </summary>
-    public partial class UpdateWindow : Window
+    class UpdateClass
     {
-        AppInfo app_info = AppInfo.GetInstance();
-        string install_ini;
-        string main_app = "AutoUpdate";
+        private string main_app;
+        private string install_ini;
+        private string url;
 
-        private static readonly log4net.ILog log =
-            log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
-
-        public UpdateWindow()
+        public UpdateClass(string main_app, string install_ini, string url)
         {
-            InitializeComponent();
-            updating_page.Visibility = Visibility.Hidden;
-            running_update_page.Visibility = Visibility.Hidden;
-            install_ini = app_info.GetInstallName();
-            label_info.Content = "名称：自动更新系统\n来源：" + app_info.GetUrl();
+            this.main_app = main_app;
+            this.install_ini = install_ini;
+            this.url = url;
         }
 
-        private void Update(object sender, RoutedEventArgs e)
+        public void LauchAssistant()
         {
             if (File.Exists(install_ini))
             {
-                FileDownload file_download = new FileDownload(app_info.GetUrl(), app_info.GetInstallName());
+                FileDownload file_download = new FileDownload(url, install_ini);
                 if (file_download.URLExists())
                 {
                     bool reboot = false;
@@ -65,7 +57,7 @@ namespace AutoUpdate
                             }
                         }
                     }
-                    
+
                     string package_name = install_confile.GetPackageName();
                     string package_zip_name = package_name + ".zip";
 
@@ -87,16 +79,15 @@ namespace AutoUpdate
 
                     if (reboot)
                     {
-                        prompt_page.Visibility = Visibility.Hidden;
-                        running_update_page.Visibility = Visibility.Hidden;
-                        updating_page.Visibility = Visibility.Visible;
-                        Process.Start("UpdateAssistant", main_app + " " + install_ini + " " + package_name + " " + "REBOOT");
-                        log.Info("Update Method: REBOOT");
+                        Trace.WriteLine("reboottttttttt");
+                        Process.Start("UpdateAssistant", main_app +  " " + install_ini + " " + package_name + " " + "REBOOT");
                     }
                     else
                     {
+                        Trace.WriteLine("runninggggggggg");
+                        
                         Process.Start("UpdateAssistant", main_app + " " + install_ini + " " + package_name + " " + "RUNNING");
-                        log.Info("Update Method: RUNNING");
+                        Trace.WriteLine(main_app + install_ini + package_name);
                         bool flag = true;
                         while (flag)
                         {
@@ -109,26 +100,13 @@ namespace AutoUpdate
                                 }
                             }
                         }
-                        prompt_page.Visibility = Visibility.Hidden;
-                        updating_page.Visibility = Visibility.Hidden;
-                        running_update_page.Visibility = Visibility.Visible;
+
                     }
-                    
+
                 }
-                
+
             }
-            
-        }
 
-        
-        private void CloseWindow(object sender, RoutedEventArgs e)
-        {
-            this.Close();
-        }
-
-        private void AppShutdown(object sender, RoutedEventArgs e)
-        {
-            Application.Current.Shutdown();
         }
     }
 }

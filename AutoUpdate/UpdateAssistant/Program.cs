@@ -17,10 +17,10 @@ namespace UpdateAssistant
 
         static void Main(string[] args)
         {
-            
-            string install_ini = args[0];
-            string package_name = args[1];
-            string update_method = args[2];
+            string main_app = args[0];
+            string install_ini = args[1];
+            string package_name = args[2];
+            string update_method = args[3];
 
             ConFile install_confile = new ConFile(install_ini);
             ConFile version_confile = new ConFile("version.ini");
@@ -32,7 +32,7 @@ namespace UpdateAssistant
                     flag = false;
                     foreach (var item in Process.GetProcesses())
                     {
-                        if (item.ProcessName == "AutoUpdate")
+                        if (item.ProcessName == main_app)
                         {
                             flag = true;
                         }
@@ -80,8 +80,8 @@ namespace UpdateAssistant
                 FileInfo file = new FileInfo(install_ini);
                 file.MoveTo("version.ini");
 
-                if (File.Exists("AutoUpdate.exe"))
-                    Process.Start("AutoUpdate");
+                if (File.Exists(main_app + ".exe"))
+                    Process.Start(main_app);
 
                 
             }
